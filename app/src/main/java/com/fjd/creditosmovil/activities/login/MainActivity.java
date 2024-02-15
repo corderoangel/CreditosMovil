@@ -1,13 +1,17 @@
-package com.fjd.creditosmovil;
+package com.fjd.creditosmovil.activities.login;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View{
+import com.fjd.creditosmovil.R;
+import com.fjd.creditosmovil.util.SnackbarUtil;
+
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     // Declaraciones de variables de vistas y presentador
     private EditText servidorEditText;
@@ -43,23 +47,30 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     // Implementación de métodos de la interfaz MainContract.View
+
     @Override
-    public void showLoginSuccess(String token) {
-        Log.e("bien", "success");
+    public void showLoginOk(String message) {
+        SnackbarUtil.showCustomSnackbar(this, message, R.color.green);
     }
 
     @Override
-    public void showLoginError() {
-        Toast.makeText(this, "Error en el inicio de sesión", Toast.LENGTH_SHORT).show();
+    public void showLoginError(String message) {
+        SnackbarUtil.showCustomSnackbar(this, message, R.color.red);
     }
 
     @Override
-    public void showNetworkError() {
-        Toast.makeText(this, "Error en la solicitud", Toast.LENGTH_SHORT).show();
+    public void showNetworkError(String message) {
+        SnackbarUtil.showCustomSnackbar(this, message, R.color.red);
     }
 
     @Override
-    public void showApiServiceError() {
-        Toast.makeText(this, "Error en el servicio de la API", Toast.LENGTH_SHORT).show();
+    public void showApiServiceError(String message) {
+        SnackbarUtil.showCustomSnackbar(this, message, R.color.red);
+    }
+
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

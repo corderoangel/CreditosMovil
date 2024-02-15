@@ -1,4 +1,6 @@
-package com.fjd.creditosmovil;
+package com.fjd.creditosmovil.activities.login;
+
+import android.content.Context;
 
 /**
  * Contrato que define los métodos que deben ser implementados
@@ -10,27 +12,28 @@ public interface MainContract {
      * para recibir notificaciones del presentador.
      */
     interface View{
-        /**
-         * Método llamado cuando el inicio de sesión es exitoso.
-         *
-         * @param token El token de sesión obtenido después del
-         * inicio de sesión exitoso.
-         */
-        void showLoginSuccess(String token);
+
+        void showLoginOk(String message);
         /**
          * Método llamado cuando ocurre un error durante el
          * inicio de sesión.
          */
-        void showLoginError();
+        void showLoginError(String message);
         /**
          * Método llamado cuando hay un error de red durante
          * el inicio de sesión.
          */
-        void showNetworkError();
+        void showNetworkError(String message);
         /**
          * Método llamado cuando hay un error en el servicio de
          * la API durante el inicio de sesión.
          */
-        void showApiServiceError();
+        void showApiServiceError(String message);
+
+        /**
+         * Método para obtener el contexto de la vista.
+         * @return El contexto de la vista.
+         */
+        Context getContext();
     }
 }

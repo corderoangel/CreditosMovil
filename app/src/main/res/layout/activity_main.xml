@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:id="@+id/layout_login"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activities.login.MainActivity">
 
     <TextView
         android:id="@+id/tv_title_mode"
@@ -113,7 +113,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:id="@+id/cc_auth"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:layout_height="wrap_content"
                     />
 
@@ -129,7 +129,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:id="@+id/cod_auth"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:layout_height="wrap_content"
                     />
 
