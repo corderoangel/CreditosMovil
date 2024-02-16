@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -17,7 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CreditosMovil"
+        android:theme="@style/Theme.CreditosApp"
         tools:targetApi="31">
         <activity
             android:name=".activities.homeGallery.homeGalleryActivity"
@@ -26,6 +27,7 @@
             android:name=".activities.home.HomeActivity"
             android:exported="false" />
         <activity
+            android:theme="@style/Theme.CreditosApp.Login"
             android:name=".activities.login.MainActivity"
             android:exported="true">
             <intent-filter>

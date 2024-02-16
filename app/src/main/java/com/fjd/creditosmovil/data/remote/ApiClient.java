@@ -1,6 +1,6 @@
-package com.fjd.creditosmovil.data.remote.models;
+package com.fjd.creditosmovil.data.remote;
 
-import com.fjd.creditosmovil.data.remote.ApiService;
+import com.fjd.creditosmovil.data.remote.EndPoints;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -12,16 +12,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private static ApiService apiService;
+    private static EndPoints endpoints;
 
-    public static ApiService getApiService(String baseUrl){
-        if(apiService == null){
+    public static EndPoints getApiService(String baseUrl){
+        if(endpoints == null){
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            apiService = retrofit.create(ApiService.class);
+            endpoints = retrofit.create(EndPoints.class);
         }
-        return apiService;
+        return endpoints;
     }
 }

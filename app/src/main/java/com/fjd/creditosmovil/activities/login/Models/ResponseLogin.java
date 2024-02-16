@@ -1,8 +1,9 @@
-package com.fjd.creditosmovil.data.remote.models;
+package com.fjd.creditosmovil.activities.login.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ErrorResponse {
+public class ResponseLogin {
+
     @SerializedName("S_1")
     private int s1;
 

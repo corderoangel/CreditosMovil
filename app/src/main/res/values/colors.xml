@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary">#1976D2</color>
+    <color name="effect">#6D555555</color>
+    <color name="gray">#28555555</color>
+    <color name="accent">#BBDEFB</color>
+    <color name="text">#212121</color>
+    <color name="boxtext">#EDEFEFEF</color>
+    <color name="text2">#757575</color>
+    <color name="info">#F0C2C2C2</color>
+    <color name="dangerDark">#D32F2F</color>
+    <color name="danger">#F44336</color>
+    <color name="success">#8BC34A</color>
+    <color name="warning">#F1C40F</color>
+    <color name="waterMaker">#FFF700</color>
+    <color name="primaryDark">#07437E</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="green">#4CAF50</color>
-    <color name="red">#F44336</color>
 </resources>

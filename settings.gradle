@@ -2,6 +2,7 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
         gradlePluginPortal()
     }
 }
@@ -12,6 +13,14 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
 
+}
 rootProject.name = "CreditosMovil"
 include ':app'

@@ -11,12 +11,31 @@ import com.fjd.creditosmovil.R;
 import com.google.android.material.snackbar.Snackbar;
 
 public class SnackbarUtil {
-    public static void showCustomSnackbar(Context context, String message, int backgroundColor) {
-        Snackbar snackbar = Snackbar.make(((Activity) context).findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
-        View snackbarView = snackbar.getView();
-        TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
-        textView.setTextColor(Color.WHITE); // Cambia el color del texto si es necesario
-        snackbarView.setBackgroundColor(ContextCompat.getColor(context, backgroundColor)); // Cambia el color de fondo si es necesario
-        snackbar.show();
+    public static void danger(View layout, String srt, Context context) {
+        Snackbar snack = Snackbar.make(layout, srt, Snackbar.LENGTH_LONG)
+                .setBackgroundTint(context.getColor(R.color.danger))
+                .setTextColor(context.getColor(R.color.white));
+        snack.show();
+    }
+
+    public static void success(View layout, String srt, Context context) {
+        Snackbar snack = Snackbar.make(layout, srt, Snackbar.LENGTH_LONG)
+                .setBackgroundTint(context.getColor(R.color.success))
+                .setTextColor(context.getColor(R.color.white));
+        snack.show();
+    }
+
+    public static void warring(View layout, String srt, Context context) {
+        Snackbar snack = Snackbar.make(layout, srt, Snackbar.LENGTH_LONG)
+                .setBackgroundTint(context.getColor(R.color.warning))
+                .setTextColor(context.getColor(R.color.white));
+        snack.show();
+    }
+
+    public static void info(View layout, String srt, Context context) {
+        Snackbar snack = Snackbar.make(layout, srt, Snackbar.LENGTH_LONG)
+                .setBackgroundTint(context.getColor(R.color.info))
+                .setTextColor(context.getColor(R.color.white));
+        snack.show();
     }
 }
