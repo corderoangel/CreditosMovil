@@ -15,15 +15,6 @@ public class homeGalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_gallery);
 
-        ImageView galleryImageView = findViewById(R.id.galleryImageView);
-
-        // Obtener la Uri de la imagen de la actividad anterior
-        Uri photoUri = getIntent().getParcelableExtra("PHOTO_URI");
-
-        if (photoUri != null) {
-            // Configurar la imagen en la ImageView
-            galleryImageView.setImageURI(photoUri);
-        }
     }
 
 }

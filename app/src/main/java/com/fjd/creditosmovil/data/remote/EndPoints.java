@@ -17,7 +17,7 @@ import retrofit2.http.POST;
  */
 public interface EndPoints {
     @POST("login")
-    Call<List<ResponseLogin>> login(@Body FieldsLogin fieldsLogin);
+    Call<ArrayList<ResponseLogin>> login(@Body FieldsLogin fieldsLogin);
 
     @POST("service")
     Call<ArrayList<ResponseData>> service(@Body FieldsData fieldsData);

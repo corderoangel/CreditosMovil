@@ -2,6 +2,8 @@ package com.fjd.creditosmovil.data.remote;
 
 import com.fjd.creditosmovil.data.remote.EndPoints;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -15,13 +17,21 @@ public class ApiClient {
     private static EndPoints endpoints;
 
     public static EndPoints getApiService(String baseUrl){
-        if(endpoints == null){
-            Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit = null;
+        final HttpLoggingInterceptor logging
+                = new HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BODY);
+        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        try {
+            retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient.build())
                     .build();
-            endpoints = retrofit.create(EndPoints.class);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return endpoints;
+        return retrofit != null ? retrofit.create(EndPoints.class) : null;
     }
 }

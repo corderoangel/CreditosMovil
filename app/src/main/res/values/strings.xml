@@ -6,4 +6,5 @@
     <string name="servidor">Servidor</string>
     <string name="dominio">Dominio</string>
     <string name="contrase_a">Contraseña</string>
+    <string name="ingrese_una_busqueda">Ingrese una búsqueda</string>
 </resources>

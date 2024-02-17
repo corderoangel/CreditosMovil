@@ -1,8 +1,6 @@
 package com.fjd.creditosmovil.activities.home.MVP;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 
 import com.fjd.creditosmovil.activities.home.models.ResponseData;
 import com.fjd.creditosmovil.util.contracts.ShowMessages;
@@ -17,7 +15,7 @@ public interface HomeContract {
     }
 
     interface Presenter {
-        void executeSend();
+        void getDataList();
     }
 
     interface CallbackParams {

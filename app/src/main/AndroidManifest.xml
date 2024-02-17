@@ -24,7 +24,7 @@
             android:name=".activities.homeGallery.homeGalleryActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.home.HomeActivity"
+            android:name=".activities.home.view.HomeActivity"
             android:exported="false" />
         <activity
             android:theme="@style/Theme.CreditosApp.Login"
