@@ -8,7 +8,7 @@
     tools:context=".activities.login.MainActivity">
 
 
-    <LinearLayout
+    <View
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
+    <View
         android:orientation="vertical"
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-    </LinearLayout>
+    </View>
 
     <LinearLayout
         android:id="@+id/linearLayout2"

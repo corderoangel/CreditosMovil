@@ -1,4 +1,4 @@
-package com.fjd.creditosmovil.util;
+package com.fjd.creditosmovil.util.singletons;
 
 import static android.content.Context.MODE_PRIVATE;
 

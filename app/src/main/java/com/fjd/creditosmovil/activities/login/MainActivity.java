@@ -1,21 +1,25 @@
 package com.fjd.creditosmovil.activities.login;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Toast;
 
 import com.fjd.creditosmovil.activities.home.view.HomeActivity;
 import com.fjd.creditosmovil.activities.login.MVP.MainContract;
 import com.fjd.creditosmovil.activities.login.MVP.MainPresenter;
 import com.fjd.creditosmovil.activities.login.Models.FormLogin;
 import com.fjd.creditosmovil.databinding.ActivityMainBinding;
-import com.fjd.creditosmovil.util.SnackbarUtil;
-import com.fjd.creditosmovil.util.Tools;
+import com.fjd.creditosmovil.util.singletons.Permissions;
+import com.fjd.creditosmovil.util.singletons.SnackbarUtil;
+import com.fjd.creditosmovil.util.singletons.Tools;
 import com.fjd.creditosmovil.util.contracts.SessionUser;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Permissions.setPerms(this);
         presenter = new MainPresenter(this);
         formLogin = new FormLogin();
         // Configuración del botón de autenticación
@@ -83,6 +88,17 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     public boolean validFormLogin(FormLogin formLogin){
         return !formLogin.USER.isBlank() && !formLogin.PASS.isBlank() && !formLogin.DOMAIN.isBlank() && !formLogin.SERVER.isBlank();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            // Validamos si el usuario acepta el permiso para que la aplicación acceda a los datos internos del equipo, si no denegamos el acceso
+            if (grantResults.length <= 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Permissions.setPerms(this);
+            }
+        }
     }
 
     // Implementación de métodos de la interfaz MainContract.View

@@ -2,8 +2,10 @@ package com.fjd.creditosmovil.activities.home.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 
-public class ResponseData {
+
+public class ResponseData  implements Serializable {
     String S_1;
     String S_2;
     String S_3;

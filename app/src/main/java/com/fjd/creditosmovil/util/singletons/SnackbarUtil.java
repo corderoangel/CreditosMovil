@@ -1,4 +1,4 @@
-package com.fjd.creditosmovil.util;
+package com.fjd.creditosmovil.util.singletons;
 
 import android.app.Activity;
 import android.content.Context;
