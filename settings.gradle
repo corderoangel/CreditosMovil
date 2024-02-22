@@ -10,8 +10,18 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
+
     }
 }
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
 
+}
 rootProject.name = "CreditosMovil"
 include ':app'
