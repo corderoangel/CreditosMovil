@@ -17,7 +17,7 @@ import retrofit2.Response;
 
 public class HomeInteractor {
 
-    public void retriveResponseData(HomeContract.CallbackParams callbackParams){
+    public void retriveResponseData(HomeContract.CallbackParams callbackParams) {
         try {
             EndPoints api = ApiClient.getApiService(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.URL_CONNECTION));
             FieldsData data = new FieldsData();
@@ -26,15 +26,18 @@ public class HomeInteractor {
             api.service(data).enqueue(new Callback<ArrayList<ResponseData>>() {
                 @Override
                 public void onResponse(Call<ArrayList<ResponseData>> call, Response<ArrayList<ResponseData>> response) {
-                    if (!response.isSuccessful()){
+                    if (!response.isSuccessful()) {
                         callbackParams.showMessages().showErrors(response.message());
                         return;
                     }
-                    ResponseData responseData = response.body().get(0);
-                    if (responseData.getS_1().equalsIgnoreCase("0")){
-                        callbackParams.showMessages().showErrors(responseData.getS_2());
-                        return;
+                    if (response.body().size() > 0) {
+                        ResponseData responseData = response.body().get(0);
+                        if (responseData.getS_1().equalsIgnoreCase("0")) {
+                            callbackParams.showMessages().showErrors(responseData.getS_2());
+                            return;
+                        }
                     }
+
                     callbackParams.onResponse(response.body());
                 }
 
@@ -43,7 +46,7 @@ public class HomeInteractor {
                     callbackParams.showMessages().showErrors(t.getMessage());
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             callbackParams.showMessages().showErrors(e.getMessage());
             e.printStackTrace();
         }
