@@ -67,6 +67,7 @@ public class SavePhoto {
             fotosEntity.MES = String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1);
             fotosEntity.FOTO = infoPhoto.SavePhotoDirFiles(markerPhoto.WaterMaker());
             fotosEntity.ESTADO = "N";
+            fotosEntity.TYPE = "FOTO";
             /////////////////////////////////////////////////////////
             long res1 = dao.insert(fotosEntity);
             if (res1 > 0) {

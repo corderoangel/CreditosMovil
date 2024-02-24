@@ -23,6 +23,9 @@ public interface DAO {
     @Query("SELECT * FROM FOTOS WHERE ID_FOTO like:id_foto AND ESTADO LIKE:state")
     List<FotosEntity> getFotosFindId(String id_foto, String state);
 
+    @Query("SELECT * FROM FOTOS WHERE ID_FOTO like:id_foto AND TYPE LIKE:type")
+    FotosEntity getFotoFindById(String id_foto, String type);
+
     /////////////////////////// DELETES /////////////////
     @Query("DELETE FROM FOTOS WHERE ID=:id AND ID_FOTO=:id_foto")
     int deleteFotoFindID(String id, String id_foto);

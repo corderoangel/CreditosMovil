@@ -1,4 +1,4 @@
-package com.fjd.creditosmovil.activities.home.MVP;
+package com.fjd.creditosmovil.activities.process.mvp;
 
 import android.content.Context;
 
@@ -7,17 +7,15 @@ import com.fjd.creditosmovil.util.contracts.ShowMessages;
 
 import java.util.ArrayList;
 
-public interface HomeContract {
+public interface ProcessContract {
     interface View {
         ShowMessages showMessages();
-        void onResponse(ArrayList<ResponseData> response);
+        void onResponse(boolean response);
         Context getContextClass();
-        void validateToken(boolean response, ResponseData data);
     }
 
     interface Presenter {
-        void getDataList();
-        void validateToken(String tokenHash, ResponseData responseData);
+        void sendBiometric(String type, String idBiometric);
     }
 
     interface CallbackParams {

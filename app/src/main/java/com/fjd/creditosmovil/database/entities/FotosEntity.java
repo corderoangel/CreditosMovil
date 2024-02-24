@@ -13,6 +13,6 @@ public class FotosEntity {
     public String ANO;
     public String FOTO;
     public String ESTADO;
-
     public String FIRMA;
+    public String TYPE;
 }

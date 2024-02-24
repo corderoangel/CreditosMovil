@@ -71,11 +71,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
                 .setMessage("Ingresa el token de acceso que fue enviado a tu correo registrado en el sistema.")
                 .setView(accessViewBinding.getRoot())
                 .setPositiveButton("Ok", (dialog, id) ->{
-                  String accessToken = Tools.getTextsET(accessViewBinding.etTokenAccess);
-                    Toast.makeText(this, "AccessToken: "+ accessToken, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, ProcessActivity.class);
-                    intent.putExtra("objetCredit", responseData);
-                    startActivity(intent);
+                  String tokenHash = Tools.getTextsET(accessViewBinding.etTokenAccess);
+                  presenter.validateToken(tokenHash, responseData);
                 })
                 .setNegativeButton("Cancelar", ((dialog, which) -> dialog.dismiss()));
         AlertDialog dialog =  builder.create();
@@ -148,12 +145,25 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
 
     @Override
     public void onResponse(ArrayList<ResponseData> response) {
+        if (response.get(0).getClientName() == null){
+            return;
+        }
         homeViewModel.setListData(response);
     }
 
     @Override
     public Context getContextClass() {
         return this;
+    }
+
+    @Override
+    public void validateToken(boolean response, ResponseData responseData) {
+       if (response){
+           Toast.makeText(this, "AccessToken: "+ response, Toast.LENGTH_SHORT).show();
+           Intent intent = new Intent(this, ProcessActivity.class);
+           intent.putExtra("objetCredit", responseData);
+           startActivity(intent);
+       }
     }
 
     @Override
