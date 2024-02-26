@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class FieldsData {
     @SerializedName("token")
     String token_access;
-    @SerializedName("hash_token")
+    @SerializedName("ECODIGO")
     String token_hash;
     @SerializedName("action")
     String action;
@@ -13,6 +13,8 @@ public class FieldsData {
     String photoB64;
     @SerializedName("firma_b64")
     String firmaB64;
+    @SerializedName("EIDENTIF_USUARIO")
+    private String user;
 
     public void setToken_access(String token_access) {
         this.token_access = token_access;
@@ -32,5 +34,13 @@ public class FieldsData {
 
     public void setFirmaB64(String firmaB64) {
         this.firmaB64 = firmaB64;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }

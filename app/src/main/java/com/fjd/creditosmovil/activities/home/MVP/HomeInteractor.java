@@ -58,7 +58,7 @@ public class HomeInteractor {
             FieldsData data = new FieldsData();
             data.setToken_access(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.TOKEN));
             data.setToken_hash(hastToken);
-            data.setAction("validateToken");
+            data.setAction("validar_codigo");
             api.service(data).enqueue(new Callback<ArrayList<ResponseData>>() {
                 @Override
                 public void onResponse(Call<ArrayList<ResponseData>> call, Response<ArrayList<ResponseData>> response) {
@@ -92,9 +92,9 @@ public class HomeInteractor {
         try {
             EndPoints api = ApiClient.getApiService(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.URL_CONNECTION));
             FieldsData data = new FieldsData();
+            data.setUser(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.USER));
             data.setToken_access(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.TOKEN));
-            data.setAction("search");
-            api.service(data).enqueue(new Callback<ArrayList<ResponseData>>() {
+            api.logout(data).enqueue(new Callback<ArrayList<ResponseData>>() {
                 @Override
                 public void onResponse(Call<ArrayList<ResponseData>> call, Response<ArrayList<ResponseData>> response) {
                     if (!response.isSuccessful()) {

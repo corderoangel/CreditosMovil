@@ -72,7 +72,30 @@ public class HomePresenter  implements HomeContract.Presenter{
        }
     }
 
+    @Override
+    public void logout() {
+        try {
+            view.showMessages().showLoader("");
+            homeInteractor.retriveLogout(new HomeContract.CallbackParams() {
+                @Override
+                public void onResponse(ArrayList<ResponseData> response) {
+                    view.logout(response.get(0).getS_1().equalsIgnoreCase("1"));
+                }
 
+                @Override
+                public Context getContextClass() {
+                    return view.getContextClass();
+                }
+
+                @Override
+                public ShowMessages showMessages() {
+                    return view.showMessages();
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
 }

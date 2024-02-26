@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.fjd.creditosmovil.R;
 import com.fjd.creditosmovil.activities.home.MVP.HomeContract;
 import com.fjd.creditosmovil.activities.home.MVP.HomePresenter;
 import com.fjd.creditosmovil.activities.home.models.ResponseData;
+import com.fjd.creditosmovil.activities.login.MainActivity;
 import com.fjd.creditosmovil.activities.process.ProcessActivity;
 import com.fjd.creditosmovil.databinding.ActivityHomeBinding;
 import com.fjd.creditosmovil.databinding.VerifyAccessViewBinding;
@@ -62,7 +64,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         }
         verifyAccess(dataListModel);
     }
-    void verifyAccess(ResponseData responseData){
+
+    void verifyAccess(ResponseData responseData) {
         VerifyAccessViewBinding accessViewBinding = VerifyAccessViewBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(getDrawable(R.drawable.ic_app));
@@ -70,29 +73,30 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
                 .setCancelable(false)
                 .setMessage("Ingresa el token de acceso que fue enviado a tu correo registrado en el sistema.")
                 .setView(accessViewBinding.getRoot())
-                .setPositiveButton("Ok", (dialog, id) ->{
-                  String tokenHash = Tools.getTextsET(accessViewBinding.etTokenAccess);
-                  presenter.validateToken(tokenHash, responseData);
+                .setPositiveButton("Ok", (dialog, id) -> {
+                    String tokenHash = Tools.getTextsET(accessViewBinding.etTokenAccess);
+                    presenter.validateToken(tokenHash, responseData);
                 })
                 .setNegativeButton("Cancelar", ((dialog, which) -> dialog.dismiss()));
-        AlertDialog dialog =  builder.create();
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public void logOutDialog(){
+    public void logOutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(getDrawable(R.drawable.ic_app));
         builder.setTitle("¡Cerrar Sesión!")
                 .setCancelable(false)
                 .setMessage("¿Estas seguro de que deseas salir?")
-                .setPositiveButton("Ok", (dialog, id) ->{
+                .setPositiveButton("Ok", (dialog, id) -> {
                     deleteSharedPreferences("LOGIN");
                 })
                 .setNegativeButton("Cancelar", ((dialog, which) -> dialog.dismiss()));
-        AlertDialog dialog =  builder.create();
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
@@ -107,7 +111,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
                 presenter.getDataList();
                 break;
             case R.id.log_out:
-                Toast.makeText(this, "LogOut", Toast.LENGTH_SHORT).show();
+                presenter.logout();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -128,16 +132,19 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
 
             @Override
             public void showErrors(String err) {
+                binding.progressBar.getRoot().setVisibility(View.GONE);
                 SnackbarUtil.danger(binding.getRoot(), err, HomeActivity.this);
             }
 
             @Override
             public void showSuccess(String success) {
+                binding.progressBar.getRoot().setVisibility(View.GONE);
                 SnackbarUtil.success(binding.getRoot(), success, HomeActivity.this);
             }
 
             @Override
             public void showWarning(String warn) {
+                binding.progressBar.getRoot().setVisibility(View.GONE);
                 SnackbarUtil.warring(binding.getRoot(), warn, HomeActivity.this);
             }
         };
@@ -145,7 +152,10 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
 
     @Override
     public void onResponse(ArrayList<ResponseData> response) {
-        if (response.get(0).getClientName() == null){
+        if (response.size() == 0) {
+            return;
+        }
+        if (response.get(0).getClientName() == null) {
             return;
         }
         homeViewModel.setListData(response);
@@ -158,12 +168,22 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
 
     @Override
     public void validateToken(boolean response, ResponseData responseData) {
-       if (response){
-           Toast.makeText(this, "AccessToken: "+ response, Toast.LENGTH_SHORT).show();
-           Intent intent = new Intent(this, ProcessActivity.class);
-           intent.putExtra("objetCredit", responseData);
-           startActivity(intent);
-       }
+        if (response) {
+            Toast.makeText(this, "AccessToken: " + response, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ProcessActivity.class);
+            intent.putExtra("objetCredit", responseData);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void logout(boolean response) {
+        if (response) {
+            deleteSharedPreferences("LOGIN");
+            deleteSharedPreferences("PHOTOS");
+            startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+            finish();
+        }
     }
 
     @Override

@@ -10,31 +10,31 @@ public class ResponseData  implements Serializable {
     String S_2;
     String S_3;
     @SerializedName("TCR_ID")
-    int creditId;
+    String creditId;
     @SerializedName("ABI_ID")
-    int tempBiometricsId;
+    String tempBiometricsId;
     @SerializedName("PER_NOMBRE")
     String clientName;
     @SerializedName("fecha")
     String expirationDate;
     @SerializedName("PER_IDENTIF")
-    int clientDni;
+    String clientDni;
     @SerializedName("PER_ID")
-    int clientId;
+    String clientId;
 
-    public int getCreditId() {
+    public String getCreditId() {
         return creditId;
     }
 
-    public void setCreditId(int creditId) {
+    public void setCreditId(String creditId) {
         this.creditId = creditId;
     }
 
-    public int getTempBiometricsId() {
+    public String getTempBiometricsId() {
         return tempBiometricsId;
     }
 
-    public void setTempBiometricsId(int tempBiometricsId) {
+    public void setTempBiometricsId(String tempBiometricsId) {
         this.tempBiometricsId = tempBiometricsId;
     }
 
@@ -54,19 +54,19 @@ public class ResponseData  implements Serializable {
         this.expirationDate = expirationDate;
     }
 
-    public int getClientDni() {
+    public String getClientDni() {
         return clientDni;
     }
 
-    public void setClientDni(int clientDni) {
+    public void setClientDni(String clientDni) {
         this.clientDni = clientDni;
     }
 
-    public int getClientId() {
+    public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 

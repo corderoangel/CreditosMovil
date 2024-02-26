@@ -13,11 +13,13 @@ public interface HomeContract {
         void onResponse(ArrayList<ResponseData> response);
         Context getContextClass();
         void validateToken(boolean response, ResponseData data);
+        void logout(boolean response);
     }
 
     interface Presenter {
         void getDataList();
         void validateToken(String tokenHash, ResponseData responseData);
+        void logout();
     }
 
     interface CallbackParams {
