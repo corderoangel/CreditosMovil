@@ -16,29 +16,26 @@ import retrofit2.Response;
 
 public class ProcessInteractor {
 
-    public void retriveBiometricResponse(String biometric, String action,  ProcessContract.CallbackParams callbackParams) {
+    public void retriveBiometricResponse(ResponseData responseData, String biometric, String action,  ProcessContract.CallbackParams callbackParams) {
         try {
             EndPoints api = ApiClient.getApiService(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.URL_CONNECTION));
             FieldsData data = new FieldsData();
             data.setToken_access(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.TOKEN));
             data.setPhotoB64(biometric);
-            data.setFirmaB64(biometric);
             data.setAction(action);
-            api.service(data).enqueue(new Callback<ArrayList<ResponseData>>() {
+            data.setUser(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.USER));
+            data.setClientDni(responseData.getClientDni());
+            data.setClientId(responseData.getClientId());
+            data.setCreditId(responseData.getCreditId());
+            data.setTempBiometricsId(responseData.getTempBiometricsId());
+            data.setClientName(responseData.getClientName());
+            api.biometrics(data).enqueue(new Callback<ArrayList<ResponseData>>() {
                 @Override
                 public void onResponse(Call<ArrayList<ResponseData>> call, Response<ArrayList<ResponseData>> response) {
                     if (!response.isSuccessful()) {
                         callbackParams.showMessages().showErrors(response.message());
                         return;
                     }
-                    if (response.body().size() > 0) {
-                        ResponseData responseData = response.body().get(0);
-                        if (responseData.getS_1().equalsIgnoreCase("0")) {
-                            callbackParams.showMessages().showErrors(responseData.getS_2());
-                            return;
-                        }
-                    }
-
                     callbackParams.onResponse(response.body());
                 }
 

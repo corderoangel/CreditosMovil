@@ -9,12 +9,41 @@ public class FieldsData {
     String token_hash;
     @SerializedName("action")
     String action;
-    @SerializedName("foto_b64")
+    @SerializedName("FOTO64")
     String photoB64;
-    @SerializedName("firma_b64")
-    String firmaB64;
     @SerializedName("EIDENTIF_USUARIO")
     private String user;
+    @SerializedName("TCR_ID")
+    String creditId;
+    @SerializedName("ABI_ID")
+    String tempBiometricsId;
+    @SerializedName("PER_NOMBRE")
+    String clientName;
+    @SerializedName("PER_IDENTIF")
+    String clientDni;
+    @SerializedName("PER_ID")
+    String clientId;
+
+    public void setCreditId(String creditId) {
+        this.creditId = creditId;
+    }
+
+    public void setTempBiometricsId(String tempBiometricsId) {
+        this.tempBiometricsId = tempBiometricsId;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public void setClientDni(String clientDni) {
+        this.clientDni = clientDni;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
 
     public void setToken_access(String token_access) {
         this.token_access = token_access;
@@ -32,9 +61,6 @@ public class FieldsData {
         this.photoB64 = photoB64;
     }
 
-    public void setFirmaB64(String firmaB64) {
-        this.firmaB64 = firmaB64;
-    }
 
     public String getUser() {
         return user;

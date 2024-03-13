@@ -73,7 +73,7 @@ public class SavePhoto {
             if (res1 > 0) {
                 File file = obtenerFoto(ID_FOTO + "_" + N_MAX_PHOTO);
                 file.delete();
-                messages.showSuccess("Foto Guardada correctamente");
+              //  messages.showSuccess("Foto Guardada correctamente");
                 callbackPhoto.OnPostTakePhoto();
             }
         } catch (Exception e) {

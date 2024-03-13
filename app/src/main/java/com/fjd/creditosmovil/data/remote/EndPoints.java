@@ -25,5 +25,8 @@ public interface EndPoints {
     @POST("service")
     Call<ArrayList<ResponseData>> service(@Body FieldsData fieldsData);
 
+    @POST("foto")
+    Call<ArrayList<ResponseData>> biometrics(@Body FieldsData fieldsData);
+
 }
 

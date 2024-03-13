@@ -15,7 +15,7 @@ public interface ProcessContract {
     }
 
     interface Presenter {
-        void sendBiometric(String type, String idBiometric);
+        void sendBiometric(String type, String idBiometric, ResponseData responseData);
     }
 
     interface CallbackParams {

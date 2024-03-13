@@ -153,9 +153,11 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     @Override
     public void onResponse(ArrayList<ResponseData> response) {
         if (response.size() == 0) {
+            homeViewModel.setListData(new ArrayList<>());
             return;
         }
         if (response.get(0).getClientName() == null) {
+            homeViewModel.setListData(new ArrayList<>());
             return;
         }
         homeViewModel.setListData(response);
@@ -181,7 +183,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         if (response) {
             deleteSharedPreferences("LOGIN");
             deleteSharedPreferences("PHOTOS");
-            startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+            startActivity(new Intent(this, MainActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         }
     }
