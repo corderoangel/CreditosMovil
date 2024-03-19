@@ -49,12 +49,26 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         eventsManager();
         activeSession();
     }
+
+    /**
+     * Activa la sesión del usuario si existe un token de acceso guardado en las preferencias compartidas.
+     * Este método verifica si existe un token de acceso guardado en las preferencias compartidas.
+     * Si existe un token de acceso, inicia la actividad de la pantalla principal (HomeActivity) y finaliza la actividad actual.
+     * Si no hay un token de acceso, no realiza ninguna acción.
+     */
     void activeSession(){
         if (!SessionUser.getAccess(this, SessionUser.TOKEN).isEmpty()){
             startActivity( new Intent(this, HomeActivity.class));
             finish();
         }
     }
+
+    /**
+     * Establece los datos del formulario de inicio de sesión.
+     * Este método recupera los datos ingresados en los campos de la interfaz de usuario relacionados con el inicio de sesión,
+     * como el nombre de usuario, la contraseña, el servidor y el dominio.
+     * Luego, utiliza estos datos para configurar los campos correspondientes del objeto FormLogin.
+     */
     void setFormLogin(){
         formLogin.PASS = Tools.getTextsET(binding.codAuth);
         formLogin.USER = Tools.getTextsET(binding.ccAuth);
@@ -62,6 +76,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         formLogin.DOMAIN = Tools.getTextsET(binding.dominio);
         formLogin.URL_CONNECTION = "https://" + Tools.getTextsET(binding.servidor)+"/"+Tools.getTextsET(binding.dominio)+"/api/";
     }
+
+    /**
+     * Gestiona los eventos de cambio en los campos del formulario de inicio de sesión.
+     * Este método establece un TextWatcher en cada campo del formulario de inicio de sesión.
+     * El TextWatcher detecta cambios en los campos y llama al método setFormLogin() para actualizar los datos del formulario.
+     * Además, habilita o deshabilita el botón de inicio de sesión en función de la validez del formulario.
+     */
     void eventsManager(){
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -86,6 +107,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         binding.codAuth.addTextChangedListener(watcher);
     }
 
+    /**
+     * Valida si los campos del formulario de inicio de sesión contienen datos válidos.
+     * Este método comprueba si los campos del formulario de inicio de sesión, incluyendo el nombre de usuario,
+     * la contraseña, el servidor y el dominio, no están en blanco.
+     * Devuelve true si todos los campos contienen datos válidos, de lo contrario, devuelve false.
+     */
     public boolean validFormLogin(FormLogin formLogin){
         return !formLogin.USER.isBlank() && !formLogin.PASS.isBlank() && !formLogin.DOMAIN.isBlank() && !formLogin.SERVER.isBlank();
     }
@@ -121,6 +148,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         binding.progressBar.getRoot().setVisibility(View.GONE);
     }
 
+    /**
+     * Maneja la respuesta posterior a la solicitud de inicio de sesión.
+     *
+     * Este método se llama después de recibir una respuesta del servidor al intentar iniciar sesión.
+     * Habilita el botón de inicio de sesión y oculta el indicador de progreso.
+     * Si la respuesta indica un inicio de sesión exitoso (true), activa la sesión del usuario.
+     *
+     * @param response  Indica si la solicitud de inicio de sesión fue exitosa.
+     *                  Es true si el inicio de sesión fue exitoso, false en caso contrario.
+     */
     @Override
     public void onPostResponse(boolean response) {
         binding.btnLogin.setEnabled(true);

@@ -13,15 +13,27 @@ public class HomePresenter  implements HomeContract.Presenter{
 
     private HomeContract.View view;
     HomeInteractor homeInteractor;
-    String TAG = "ErrorHomePresenter";
 
-
+    /**
+     * Constructor de la clase HomePresenter.
+     * Este constructor inicializa un nuevo objeto HomePresenter con la vista proporcionada
+     * y crea una nueva instancia de HomeInteractor para manejar la lógica de negocio relacionada con la vista.
+     *
+     * @param view La vista asociada al presentador.
+     *             Proporciona la interfaz de usuario con la que interactúa el presentador.
+     */
     public HomePresenter(HomeContract.View view) {
         this.view = view;
         homeInteractor = new HomeInteractor();
     }
 
-
+    /**
+     * Obtiene una lista de datos mediante una solicitud al interactor y maneja la respuesta.
+     * Este método solicita al interactor la recuperación de una lista de datos.
+     * Muestra un indicador de carga mientras espera la respuesta del interactor.
+     * Una vez que se recibe la respuesta, se procesa y se envía a la vista para su presentación.
+     * Finalmente, oculta el indicador de carga después de completar la operación.
+     */
     @Override
     public void getDataList() {
       try {
@@ -47,6 +59,14 @@ public class HomePresenter  implements HomeContract.Presenter{
           e.printStackTrace();
       }
     }
+
+    /**
+     * Valida un token hash mediante una solicitud al interactor y maneja la respuesta.
+     * Este método solicita al interactor validar un token hash especificado.
+     * Muestra un indicador de carga mientras espera la respuesta del interactor.
+     * Una vez que se recibe la respuesta, se procesa para determinar si el token es válido o no.
+     * Luego, se llama al método de la vista correspondiente para manejar el resultado de la validación.
+     */
     @Override
     public void validateToken(String tokenHash, ResponseData responseData){
        try {
@@ -72,6 +92,13 @@ public class HomePresenter  implements HomeContract.Presenter{
        }
     }
 
+    /**
+     * Realiza un cierre de sesión mediante una solicitud al interactor y maneja la respuesta.
+     * Este método solicita al interactor realizar un cierre de sesión.
+     * Muestra un indicador de carga mientras espera la respuesta del interactor.
+     * Una vez que se recibe la respuesta, se procesa para determinar si el cierre de sesión fue exitoso o no.
+     * Luego, se llama al método de la vista correspondiente para manejar el resultado del cierre de sesión.
+     */
     @Override
     public void logout() {
         try {

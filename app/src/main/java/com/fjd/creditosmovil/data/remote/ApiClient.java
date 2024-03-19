@@ -14,8 +14,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private static EndPoints endpoints;
 
+    /**
+     * Obtiene una instancia de la interfaz de punto final de la API para una URL base dada.
+     * Este método crea y configura un cliente HTTP con un interceptor de registro de nivel de cuerpo.
+     * Luego, construye una instancia de Retrofit con la URL base proporcionada y el cliente HTTP configurado.
+     * Finalmente, crea y devuelve una instancia de la interfaz de punto final de la API utilizando Retrofit.
+     *
+     * @param baseUrl La URL base de la API a la que se realizarán las solicitudes.
+     * @return Una instancia de la interfaz de punto final de la API para la URL base dada, o null si ocurrió un error.
+     */
     public static EndPoints getApiService(String baseUrl){
         Retrofit retrofit = null;
         final HttpLoggingInterceptor logging

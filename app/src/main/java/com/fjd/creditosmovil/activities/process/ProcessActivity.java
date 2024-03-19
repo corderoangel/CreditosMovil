@@ -85,6 +85,14 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Establece los valores necesarios para la actividad actual.
+     * Este método recupera los datos enviados desde la actividad anterior a través de un Intent.
+     * Si se encuentran los datos esperados, se utilizan para inicializar variables relevantes y configurar
+     * la información de la foto en el objeto InfoPhoto.
+     * Si los datos esperados no están presentes en el Intent, la actividad se finaliza.
+     */
+
     void setValues() {
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("objetCredit")) {
@@ -101,6 +109,11 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         }
     }
 
+    /**
+     * Restablece los datos del cliente eliminando la información de la foto asociada al crédito actual.
+     * Este método elimina la información de la foto correspondiente al ID de crédito actual
+     * de la base de datos, dejando los datos del cliente en un estado inicial o vacío.
+     */
     void resetDataClient() {
         dao.deleteFotoFindID(ID_CREDIT);
     }
@@ -121,13 +134,23 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         }
     }
 
+    /**
+     * Verifica la existencia de una firma asociada al crédito actual y la envía para su procesamiento.
+     * Este método verifica si hay una firma asociada al ID de crédito actual que aún no se haya procesado.
+     * Si se encuentra una firma no procesada en la base de datos, se envía al servidor para su procesamiento.
+     */
     void verifySignature() {
         FotosEntity entity = dao.getFotoFindId(ID_CREDIT, "FIRMA", "N");
         if (entity != null) {
             new ProcessPresenter(this).sendBiometric("FIRMA", ID_CREDIT, CLIENT_DATA);
         }
     }
-
+    /**
+     * Verifica si se han agregado correctamente todas las biometrías asociadas al crédito actual.
+     * Este método comprueba si se han agregado con éxito todas las biometrías requeridas asociadas al ID de crédito actual.
+     * Si todas las biometrías requeridas han sido agregadas con éxito, la actividad se finaliza.
+     * Si faltan biometrías por agregar, se muestra un mensaje de advertencia indicando que se deben agregar todos los datos.
+     */
     void verifySuccessBiometrics() {
         if (dao.getSuccessPhoto(ID_CREDIT) > 0) {
             finish();
@@ -142,17 +165,27 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         super.onResume();
     }
 
+    /**
+     * Devuelve una implementación de ShowMessages para mostrar mensajes en la interfaz de usuario.
+     * Este método proporciona una implementación de la interfaz ShowMessages que permite mostrar mensajes
+     * de carga, éxito, advertencia y error en la interfaz de usuario de la actividad actual.
+     * La implementación utiliza SnackbarUtil para mostrar los mensajes y gestionar la visibilidad de los elementos de la interfaz.
+     */
     @Override
     public ShowMessages showMessages() {
         return new ShowMessages() {
             public void showLoader(String str) {
                 SnackbarUtil.success(binding.getRoot(), str, ProcessActivity.this);
                 binding.progressBar.getRoot().setVisibility(View.VISIBLE);
+                binding.capturePhotoButton.setEnabled(false);
+                binding.captureSignatureButton.setEnabled(false);
             }
 
             @Override
             public void hideLoader() {
                 binding.progressBar.getRoot().setVisibility(View.GONE);
+                binding.capturePhotoButton.setEnabled(true);
+                binding.captureSignatureButton.setEnabled(true);
             }
 
 
@@ -160,22 +193,37 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
             public void showErrors(String err) {
                 binding.progressBar.getRoot().setVisibility(View.GONE);
                 SnackbarUtil.danger(binding.getRoot(), err, ProcessActivity.this);
+                binding.capturePhotoButton.setEnabled(true);
+                binding.captureSignatureButton.setEnabled(true);
             }
 
             @Override
             public void showSuccess(String success) {
                 binding.progressBar.getRoot().setVisibility(View.GONE);
                 SnackbarUtil.success(binding.getRoot(), success, ProcessActivity.this);
+                binding.capturePhotoButton.setEnabled(true);
+                binding.captureSignatureButton.setEnabled(true);
             }
 
             @Override
             public void showWarning(String warn) {
                 binding.progressBar.getRoot().setVisibility(View.GONE);
                 SnackbarUtil.warring(binding.getRoot(), warn, ProcessActivity.this);
+                binding.capturePhotoButton.setEnabled(true);
+                binding.captureSignatureButton.setEnabled(true);
             }
         };
     }
 
+    /**
+     * Maneja la respuesta recibida del servidor después de procesar una solicitud de biometría.
+     * Este método se llama cuando se recibe una respuesta del servidor después de procesar una solicitud de biometría.
+     * Si la respuesta es positiva (true), se obtienen y muestran las fotos asociadas al crédito actual,
+     * así como la firma, si está disponible.
+     *
+     * @param response El resultado de la solicitud de biometría procesada por el servidor.
+     *                 Es true si la solicitud se procesó con éxito, false en caso contrario.
+     */
     @Override
     public void onResponse(boolean response) {
         if (response) {

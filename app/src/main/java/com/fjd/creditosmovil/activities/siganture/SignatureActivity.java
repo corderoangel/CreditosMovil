@@ -21,6 +21,15 @@ public class SignatureActivity extends AppCompatActivity {
     ActivitySignatureBinding binding;
     CaptureBitmapView captureBitmapView;
 
+    /**
+     * Llamado cuando la actividad se está iniciando.
+     * Este método se llama cuando la actividad se está iniciando por primera vez.
+     * Configura la interfaz de usuario inflando el diseño de la actividad y estableciéndolo como contenido de la ventana.
+     * Crea una instancia de CaptureBitmapView para capturar la firma y la agrega al diseño de la actividad.
+     * Configura el botón de limpiar firma para borrar la firma capturada y el botón de guardar firma para guardar la firma capturada.
+     *
+     * @param savedInstanceState El estado de la actividad guardado anteriormente, si está disponible.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +41,13 @@ public class SignatureActivity extends AppCompatActivity {
         binding.saveSignatureButton.setOnClickListener(v -> saveSignarute());
     }
 
+    /**
+     * Guarda la firma capturada en la base de datos local.
+     * Este método guarda la firma capturada en la base de datos local si se proporcionan los datos necesarios.
+     * Se espera que los datos de crédito y biometría estén presentes en la intención que inició esta actividad.
+     * La firma se guarda como una entidad de fotos en la base de datos local, con el tipo "FIRMA".
+     * Si la operación de inserción es exitosa, se finaliza la actividad.
+     */
     private void saveSignarute() {
         try {
 

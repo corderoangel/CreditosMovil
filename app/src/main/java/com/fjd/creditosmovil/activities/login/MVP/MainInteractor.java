@@ -17,7 +17,17 @@ import retrofit2.Response;
 
 public class MainInteractor {
 
-    String TAG = "Errors";
+    /**
+     * Recupera la respuesta de inicio de sesión del servidor utilizando la API proporcionada.
+     *
+     * Este método realiza una solicitud de inicio de sesión al servidor utilizando los datos proporcionados en el formulario de inicio de sesión.
+     * Una vez que se recibe la respuesta del servidor, se procesa para determinar si el inicio de sesión fue exitoso o no.
+     * Si el inicio de sesión fue exitoso, se llama al método onResponse del callback con los datos de inicio de sesión recibidos.
+     * Si hubo un error durante la solicitud, se llama al método onError del callback con el mensaje de error correspondiente.
+     *
+     * @param callback   El objeto de callback que maneja la respuesta del servidor y los posibles errores.
+     * @param formLogin  Los datos del formulario de inicio de sesión, incluyendo el nombre de usuario, la contraseña y la URL de conexión.
+     */
     public void retriveResponseLogin(MainContract.retrieveResponseCallback callback, FormLogin formLogin) {
         try {
             EndPoints api;

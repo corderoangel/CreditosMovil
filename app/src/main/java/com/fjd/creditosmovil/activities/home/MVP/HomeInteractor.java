@@ -16,7 +16,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeInteractor {
-
+    /**
+     * Recupera los datos de respuesta del servidor utilizando la API proporcionada.
+     * Este método realiza una solicitud a la API especificada para recuperar los datos de respuesta del servidor.
+     * Los datos de la solicitud incluyen un token de acceso y la acción requerida, que generalmente es "search".
+     * Una vez que se recibe la respuesta del servidor, se procesa para verificar si es exitosa y se maneja en consecuencia.
+     * Si la solicitud es exitosa y se obtienen datos de respuesta, se llama al método onResponse del CallbackParams.
+     *
+     * @param callbackParams Los parámetros de callback que contienen la lógica para manejar la respuesta del servidor.
+     *                       Proporciona métodos para mostrar mensajes y devolver la respuesta procesada al llamador.
+     */
     public void retriveResponseData(HomeContract.CallbackParams callbackParams) {
         try {
             EndPoints api = ApiClient.getApiService(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.URL_CONNECTION));
@@ -52,6 +61,17 @@ public class HomeInteractor {
         }
     }
 
+    /**
+     * Recupera y valida un token utilizando la API proporcionada.
+     * Este método realiza una solicitud a la API especificada para validar un token utilizando un token de acceso y un token hash.
+     * La acción de la solicitud es "validar_codigo".
+     * Una vez que se recibe la respuesta del servidor, se procesa para verificar si es exitosa y se maneja en consecuencia.
+     * Si la solicitud es exitosa y se obtienen datos de respuesta, se llama al método onResponse del CallbackParams.
+     *
+     * @param hastToken      El token hash que se va a validar.
+     * @param callbackParams Los parámetros de callback que contienen la lógica para manejar la respuesta del servidor.
+     *                       Proporciona métodos para mostrar mensajes y devolver la respuesta procesada al llamador.
+     */
     public void retriveValidateToken(String hastToken,HomeContract.CallbackParams callbackParams) {
         try {
             EndPoints api = ApiClient.getApiService(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.URL_CONNECTION));
@@ -88,6 +108,17 @@ public class HomeInteractor {
         }
     }
 
+    /**
+     * Realiza un cierre de sesión en el servidor utilizando la API proporcionada.
+     *
+     * Este método realiza una solicitud al servidor para cerrar la sesión del usuario actual.
+     * La solicitud incluye el nombre de usuario y el token de acceso del usuario actual.
+     * Una vez que se recibe la respuesta del servidor, se procesa para verificar si es exitosa y se maneja en consecuencia.
+     * Si la solicitud es exitosa y se obtienen datos de respuesta, se llama al método onResponse del CallbackParams.
+     *
+     * @param callbackParams Los parámetros de callback que contienen la lógica para manejar la respuesta del servidor.
+     *                       Proporciona métodos para mostrar mensajes y devolver la respuesta procesada al llamador.
+     */
     public void retriveLogout(HomeContract.CallbackParams callbackParams) {
         try {
             EndPoints api = ApiClient.getApiService(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.URL_CONNECTION));

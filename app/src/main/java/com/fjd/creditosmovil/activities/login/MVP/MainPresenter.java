@@ -64,6 +64,15 @@ public class MainPresenter {
         }
     }
 
+    /**
+     * Guarda los datos de acceso del usuario en las preferencias compartidas.
+     * Este método guarda el token de acceso, el nombre de usuario y la URL de conexión en las preferencias compartidas
+     * para que estén disponibles para futuras sesiones de inicio de sesión.
+     *
+     * @param context    El contexto de la aplicación.
+     * @param token      El token de acceso generado durante el inicio de sesión.
+     * @param formLogin  Los datos del formulario de inicio de sesión, incluyendo el nombre de usuario y la URL de conexión.
+     */
     public static void saveAccessLogin(Context context, String token, FormLogin formLogin) {
         SharedPreferences preferences = context.getSharedPreferences("LOGIN", MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
