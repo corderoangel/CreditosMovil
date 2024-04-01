@@ -51,8 +51,8 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         setValues();
         resetDataClient();
         binding.capturePhotoButton.setOnClickListener(v -> {
-            Log.e("TAG", "onCreate: " + ID_CREDIT);
-            if (dao.getFotoFindById(ID_CREDIT, "FOTO") != null) {
+            Log.e("TAG", "onCreate: " + dao.getFotoFindId(ID_CREDIT, "FOTO", "N"));
+            if (dao.getFotoFindId(ID_CREDIT, "FOTO", "N") != null) {
                 showMessages().showWarning("Ya tienes una foto en proceso");
                 return;
             }
