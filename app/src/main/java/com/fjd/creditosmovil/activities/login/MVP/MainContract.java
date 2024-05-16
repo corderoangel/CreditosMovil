@@ -23,7 +23,8 @@ public interface MainContract {
     }
 
     interface Presenter{
-        void execute(FormLogin formLogin);
+        void login(FormLogin formLogin);
+        void refreshToken(FormLogin formLogin,String token);
     }
     interface retrieveResponseCallback{
         void onResponse(ResponseLogin response);

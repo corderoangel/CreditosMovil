@@ -1,16 +1,14 @@
 package com.fjd.creditosmovil.util.singletons;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
-import android.widget.TextView;
-import androidx.core.content.ContextCompat;
 
 import com.fjd.creditosmovil.R;
 import com.google.android.material.snackbar.Snackbar;
 
-public class SnackbarUtil {
+public class Alerts {
     public static void danger(View layout, String srt, Context context) {
         Snackbar snack = Snackbar.make(layout, srt, Snackbar.LENGTH_LONG)
                 .setBackgroundTint(context.getColor(R.color.danger))
@@ -37,5 +35,17 @@ public class SnackbarUtil {
                 .setBackgroundTint(context.getColor(R.color.info))
                 .setTextColor(context.getColor(R.color.white));
         snack.show();
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+  public static void errorDialog(Context context, String str) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setIcon(context.getDrawable(R.drawable.baseline_cancel_24));
+        builder.setTitle("Error!!")
+                .setCancelable(false)
+                .setMessage(str)
+                .setPositiveButton("Ok", (dialog, id) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

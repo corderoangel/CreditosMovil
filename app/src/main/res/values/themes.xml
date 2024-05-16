@@ -26,4 +26,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="MyOutlinedButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <!-- Aquí puedes personalizar el estilo del botón según tus necesidades -->
+    </style>
 </resources>

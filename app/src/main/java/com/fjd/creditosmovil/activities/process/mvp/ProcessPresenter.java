@@ -13,6 +13,7 @@ import com.fjd.creditosmovil.util.contracts.ShowMessages;
 import com.fjd.creditosmovil.util.photos.MarkerPhoto;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class ProcessPresenter implements ProcessContract.Presenter {
@@ -51,9 +52,9 @@ public class ProcessPresenter implements ProcessContract.Presenter {
     @Override
     public void sendBiometric(String type, String idBiometric, ResponseData responseData) {
         try {
-            view.showMessages().showLoader("Enviando "+type);
+            view.showMessages().showLoader("Enviando "+type.toLowerCase(Locale.ROOT));
             String biometric = getBiometric(type, idBiometric).FOTO;
-            if (type.equalsIgnoreCase("foto")) {
+            if (type.equalsIgnoreCase("FOTO")) {
                 Bitmap bitmap = BitmapFactory.decodeFile(biometric);
                 MarkerPhoto markerPhoto = new MarkerPhoto(view.getContextClass(), null, null, null, null);
                 biometric = Base64.encodeToString(markerPhoto.getBytes(bitmap), Base64.DEFAULT);

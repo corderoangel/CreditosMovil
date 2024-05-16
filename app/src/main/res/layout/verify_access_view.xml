@@ -7,11 +7,20 @@
     <EditText
         android:padding="8dp"
         android:textAlignment="center"
-        android:hint="xxxxxx"
+        android:hint="@string/xxxxxx"
         android:background="@drawable/empty_backgroud"
         android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et_token_access"
         android:importantForAutofill="no" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/resendButton"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/resend_code"/>
 </LinearLayout>

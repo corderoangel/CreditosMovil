@@ -10,6 +10,9 @@ public class ResponseLogin {
     @SerializedName("S_2")
     private String s2;
 
+    @SerializedName("S_EST_SESSION")
+    private String state_session;
+
     @SerializedName("JWT")
     private String jwt;
 
@@ -36,4 +39,12 @@ public class ResponseLogin {
     public void setJWT(String jwt) {
         this.jwt = jwt;
     }
+    public String getState_session() {
+        return state_session;
+    }
+
+    public void setState_session(String state_session) {
+        this.state_session = state_session;
+    }
+
 }

@@ -20,6 +20,7 @@ public interface HomeContract {
         void getDataList();
         void validateToken(String tokenHash, ResponseData responseData);
         void logout();
+        void refreshToken(String idTempCredit);
     }
 
     interface CallbackParams {

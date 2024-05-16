@@ -27,10 +27,11 @@ import com.fjd.creditosmovil.databinding.ActivityProcessBinding;
 import com.fjd.creditosmovil.util.contracts.ShowMessages;
 import com.fjd.creditosmovil.util.photos.InfoPhoto;
 import com.fjd.creditosmovil.util.photos.SavePhoto;
+import com.fjd.creditosmovil.util.singletons.Alerts;
 import com.fjd.creditosmovil.util.singletons.Permissions;
-import com.fjd.creditosmovil.util.singletons.SnackbarUtil;
 
-public class ProcessActivity extends AppCompatActivity implements ProcessContract.View {
+public class ProcessActivity extends AppCompatActivity implements ProcessContract.View, ShowMessages {
+    private static final String TAG = "ProcessActivity";
     SavePhoto savePhoto;
     InfoPhoto infoPhoto;
     ActivityProcessBinding binding;
@@ -39,6 +40,11 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
     String ID_CREDIT, ID_BIOMETRIC;
     ResponseData CLIENT_DATA;
 
+    /**
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +56,17 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         savePhoto = new SavePhoto(this, showMessages());
         setValues();
         resetDataClient();
+        //evento para capturar la foto
         binding.capturePhotoButton.setOnClickListener(v -> {
-            Log.e("TAG", "onCreate: " + dao.getFotoFindId(ID_CREDIT, "FOTO", "N"));
-            if (dao.getFotoFindId(ID_CREDIT, "FOTO", "N") != null) {
+            setValues();
+            if (dao.getFotoFindId(ID_CREDIT, "FOTO", "S") != null) {
                 showMessages().showWarning("Ya tienes una foto en proceso");
                 return;
             }
             Permissions.setPerms(this);
             savePhoto.CapturarFoto();
         });
+        //Evento para agregar la firma
         binding.captureSignatureButton.setOnClickListener(v -> {
             if (dao.getFotoFindId(ID_CREDIT, "FIRMA", "S") != null) {
                 showMessages().showWarning("Ya tienes una firma en proceso");
@@ -70,6 +78,7 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
             startActivity(intentSignature);
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_process, menu);
@@ -115,7 +124,7 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
      * de la base de datos, dejando los datos del cliente en un estado inicial o vacío.
      */
     void resetDataClient() {
-        dao.deleteFotoFindID(ID_CREDIT);
+        //dao.deleteFotoFindID(ID_CREDIT);
     }
 
     @Override
@@ -123,13 +132,16 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SavePhoto.REQUEST_CODE && resultCode == RESULT_OK) {
             try {
+                //Una vez se toma la foto se procesa y pasa a su envio por el presenter
                 savePhoto.GuardarFoto(() -> {
+                    //Validamos que exista una foto con este temporal biometrico
                     if (dao.getFotoFindId(infoPhoto.getDataPhoto(InfoPhoto.ID_FOTO), "FOTO", "N") != null) {
-                        new ProcessPresenter(this).sendBiometric("foto", ID_CREDIT, CLIENT_DATA);
+                        //Ejecutamos el envio de la foto encontrada
+                        new ProcessPresenter(this).sendBiometric("FOTO", ID_CREDIT, CLIENT_DATA);
                     }
                 });
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "onActivityResult: ", e);
             }
         }
     }
@@ -145,6 +157,7 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
             new ProcessPresenter(this).sendBiometric("FIRMA", ID_CREDIT, CLIENT_DATA);
         }
     }
+
     /**
      * Verifica si se han agregado correctamente todas las biometrías asociadas al crédito actual.
      * Este método comprueba si se han agregado con éxito todas las biometrías requeridas asociadas al ID de crédito actual.
@@ -154,65 +167,21 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
     void verifySuccessBiometrics() {
         if (dao.getSuccessPhoto(ID_CREDIT) > 0) {
             finish();
-        }else {
+        } else {
             showMessages().showWarning("Debes Agregar todos los datos");
         }
     }
 
-    @Override
-    protected void onResume() {
-        verifySignature();
-        super.onResume();
-    }
 
     /**
      * Devuelve una implementación de ShowMessages para mostrar mensajes en la interfaz de usuario.
      * Este método proporciona una implementación de la interfaz ShowMessages que permite mostrar mensajes
      * de carga, éxito, advertencia y error en la interfaz de usuario de la actividad actual.
-     * La implementación utiliza SnackbarUtil para mostrar los mensajes y gestionar la visibilidad de los elementos de la interfaz.
+     * La implementación utiliza Alerts para mostrar los mensajes y gestionar la visibilidad de los elementos de la interfaz.
      */
     @Override
     public ShowMessages showMessages() {
-        return new ShowMessages() {
-            public void showLoader(String str) {
-                SnackbarUtil.success(binding.getRoot(), str, ProcessActivity.this);
-                binding.progressBar.getRoot().setVisibility(View.VISIBLE);
-                binding.capturePhotoButton.setEnabled(false);
-                binding.captureSignatureButton.setEnabled(false);
-            }
-
-            @Override
-            public void hideLoader() {
-                binding.progressBar.getRoot().setVisibility(View.GONE);
-                binding.capturePhotoButton.setEnabled(true);
-                binding.captureSignatureButton.setEnabled(true);
-            }
-
-
-            @Override
-            public void showErrors(String err) {
-                binding.progressBar.getRoot().setVisibility(View.GONE);
-                SnackbarUtil.danger(binding.getRoot(), err, ProcessActivity.this);
-                binding.capturePhotoButton.setEnabled(true);
-                binding.captureSignatureButton.setEnabled(true);
-            }
-
-            @Override
-            public void showSuccess(String success) {
-                binding.progressBar.getRoot().setVisibility(View.GONE);
-                SnackbarUtil.success(binding.getRoot(), success, ProcessActivity.this);
-                binding.capturePhotoButton.setEnabled(true);
-                binding.captureSignatureButton.setEnabled(true);
-            }
-
-            @Override
-            public void showWarning(String warn) {
-                binding.progressBar.getRoot().setVisibility(View.GONE);
-                SnackbarUtil.warring(binding.getRoot(), warn, ProcessActivity.this);
-                binding.capturePhotoButton.setEnabled(true);
-                binding.captureSignatureButton.setEnabled(true);
-            }
-        };
+        return this;
     }
 
     /**
@@ -227,21 +196,36 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
     @Override
     public void onResponse(boolean response) {
         if (response) {
-            dao.getFotosFindId(infoPhoto.getDataPhoto(InfoPhoto.ID_FOTO), "S").forEach(fotosEntity -> {
-                Bitmap bitmap = BitmapFactory.decodeFile(fotosEntity.FOTO);
-                if (bitmap == null) {
-                    return;
-                }
-                binding.capturePhotoButton.setImageBitmap(bitmap);
-            });
-            FotosEntity entity = dao.getFotoFindId(ID_CREDIT, "FIRMA", "%%");
-            if (entity == null) {
-                return;
-            }
-            byte[] bitmap = Base64.decode(entity.FOTO, Base64.DEFAULT);
-            binding.captureSignatureButton.setImageBitmap(BitmapFactory.decodeByteArray(bitmap, 0, bitmap.length));
+            viewPhoto();
+            viewFirma();
         }
 
+    }
+
+    void viewPhoto() {
+        try {
+            FotosEntity foto = dao.getFotoFindId(ID_CREDIT, "FOTO", "S");
+            Bitmap bitmap = BitmapFactory.decodeFile(foto.FOTO);
+            if (bitmap == null) {
+                return;
+            }
+            binding.capturePhotoButton.setImageBitmap(bitmap);
+        } catch (Exception e) {
+            Log.e(TAG, "viewPhoto: ", e);
+        }
+    }
+
+    void viewFirma() {
+        try {
+            FotosEntity firma = dao.getFotoFindId(ID_CREDIT, "FIRMA", "%%");
+            if (firma == null) {
+                return;
+            }
+            byte[] bitmap = Base64.decode(firma.FOTO, Base64.DEFAULT);
+            binding.captureSignatureButton.setImageBitmap(BitmapFactory.decodeByteArray(bitmap, 0, bitmap.length));
+        } catch (Exception e) {
+            Log.e(TAG, "viewFirma: ", e);
+        }
     }
 
     @Override
@@ -249,4 +233,51 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         return this;
     }
 
+    @Override
+    protected void onResume() {
+        setValues();
+        viewPhoto();
+        viewFirma();
+        verifySignature();
+        super.onResume();
+    }
+
+    public void showLoader(String str) {
+        Alerts.success(binding.getRoot(), str, this);
+        binding.progressBar.getRoot().setVisibility(View.VISIBLE);
+        binding.capturePhotoButton.setEnabled(false);
+        binding.captureSignatureButton.setEnabled(false);
+    }
+
+    @Override
+    public void hideLoader() {
+        binding.progressBar.getRoot().setVisibility(View.GONE);
+        binding.capturePhotoButton.setEnabled(true);
+        binding.captureSignatureButton.setEnabled(true);
+    }
+
+
+    @Override
+    public void showErrors(String err) {
+        binding.progressBar.getRoot().setVisibility(View.GONE);
+        Alerts.errorDialog(this, err);
+        binding.capturePhotoButton.setEnabled(true);
+        binding.captureSignatureButton.setEnabled(true);
+    }
+
+    @Override
+    public void showSuccess(String success) {
+        binding.progressBar.getRoot().setVisibility(View.GONE);
+        Alerts.success(binding.getRoot(), success, this);
+        binding.capturePhotoButton.setEnabled(true);
+        binding.captureSignatureButton.setEnabled(true);
+    }
+
+    @Override
+    public void showWarning(String warn) {
+        binding.progressBar.getRoot().setVisibility(View.GONE);
+        Alerts.warring(binding.getRoot(), warn, this);
+        binding.capturePhotoButton.setEnabled(true);
+        binding.captureSignatureButton.setEnabled(true);
+    }
 }

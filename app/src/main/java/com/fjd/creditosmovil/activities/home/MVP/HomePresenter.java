@@ -1,7 +1,7 @@
 package com.fjd.creditosmovil.activities.home.MVP;
 
 import android.content.Context;
-
+import android.util.Log;
 
 import com.fjd.creditosmovil.activities.home.models.ResponseData;
 import com.fjd.creditosmovil.util.contracts.ShowMessages;
@@ -9,10 +9,11 @@ import com.fjd.creditosmovil.util.contracts.ShowMessages;
 import java.util.ArrayList;
 
 
-public class HomePresenter  implements HomeContract.Presenter{
+public class HomePresenter implements HomeContract.Presenter {
 
-    private HomeContract.View view;
+    private static final String TAG = "HomePresenter";
     HomeInteractor homeInteractor;
+    private HomeContract.View view;
 
     /**
      * Constructor de la clase HomePresenter.
@@ -36,28 +37,28 @@ public class HomePresenter  implements HomeContract.Presenter{
      */
     @Override
     public void getDataList() {
-      try {
-          view.showMessages().showLoader("");
-          homeInteractor.retriveResponseData(new HomeContract.CallbackParams() {
-              @Override
-              public void onResponse(ArrayList<ResponseData> response) {
-                  view.onResponse(response);
-              }
+        try {
+            view.showMessages().showLoader("");
+            homeInteractor.retrieveResponseData(new HomeContract.CallbackParams() {
+                @Override
+                public void onResponse(ArrayList<ResponseData> response) {
+                    view.onResponse(response);
+                }
 
-              @Override
-              public Context getContextClass() {
-                  return view.getContextClass();
-              }
+                @Override
+                public Context getContextClass() {
+                    return view.getContextClass();
+                }
 
-              @Override
-              public ShowMessages showMessages() {
-                  return view.showMessages();
-              }
-          });
-          view.showMessages().hideLoader();
-      }catch (Exception e){
-          e.printStackTrace();
-      }
+                @Override
+                public ShowMessages showMessages() {
+                    return view.showMessages();
+                }
+            });
+            view.showMessages().hideLoader();
+        } catch (Exception e) {
+            Log.e(TAG, "getDataList: ", e);
+        }
     }
 
     /**
@@ -68,28 +69,32 @@ public class HomePresenter  implements HomeContract.Presenter{
      * Luego, se llama al método de la vista correspondiente para manejar el resultado de la validación.
      */
     @Override
-    public void validateToken(String tokenHash, ResponseData responseData){
-       try {
-           view.showMessages().showLoader("");
-           homeInteractor.retriveValidateToken(tokenHash, new HomeContract.CallbackParams() {
-               @Override
-               public void onResponse(ArrayList<ResponseData> response) {
-                   view.validateToken(response.get(0).getS_1().equalsIgnoreCase("1"), responseData);
-               }
+    public void validateToken(String tokenHash, ResponseData responseData) {
+        try {
+            if (tokenHash.isEmpty()) {
+                view.showMessages().showWarning("Ingrese un token valido!");
+                return;
+            }
+            view.showMessages().showLoader("");
+            homeInteractor.retrieveValidateToken(tokenHash, new HomeContract.CallbackParams() {
+                @Override
+                public void onResponse(ArrayList<ResponseData> response) {
+                    view.validateToken(response.get(0).getS_1().equalsIgnoreCase("1"), responseData);
+                }
 
-               @Override
-               public Context getContextClass() {
-                   return view.getContextClass();
-               }
+                @Override
+                public Context getContextClass() {
+                    return view.getContextClass();
+                }
 
-               @Override
-               public ShowMessages showMessages() {
-                   return view.showMessages();
-               }
-           });
-       }catch (Exception e){
-           e.printStackTrace();
-       }
+                @Override
+                public ShowMessages showMessages() {
+                    return view.showMessages();
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "validateToken: ", e);
+        }
     }
 
     /**
@@ -103,7 +108,7 @@ public class HomePresenter  implements HomeContract.Presenter{
     public void logout() {
         try {
             view.showMessages().showLoader("");
-            homeInteractor.retriveLogout(new HomeContract.CallbackParams() {
+            homeInteractor.retrieveLogout(new HomeContract.CallbackParams() {
                 @Override
                 public void onResponse(ArrayList<ResponseData> response) {
                     view.logout(response.get(0).getS_1().equalsIgnoreCase("1"));
@@ -119,9 +124,31 @@ public class HomePresenter  implements HomeContract.Presenter{
                     return view.showMessages();
                 }
             });
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(TAG, "logout: ", e);
         }
+    }
+
+    @Override
+    public void refreshToken(String idTempCredit) {
+        view.showMessages().showLoader("");
+        homeInteractor.retrieveRefreshToken(idTempCredit,new HomeContract.CallbackParams() {
+            @Override
+            public void onResponse(ArrayList<ResponseData> response) {
+                view.onResponse(response);
+            }
+
+            @Override
+            public Context getContextClass() {
+                return view.getContextClass();
+            }
+
+            @Override
+            public ShowMessages showMessages() {
+                return view.showMessages();
+            }
+        });
+
     }
 
 

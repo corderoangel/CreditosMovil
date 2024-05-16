@@ -19,6 +19,9 @@ public interface EndPoints {
     @POST("login")
     Call<ArrayList<ResponseLogin>> login(@Body FieldsLogin fieldsLogin);
 
+    @POST("login")
+    Call<ArrayList<ResponseLogin>> session_reset(@Body FieldsLogin fieldsLogin);
+
     @POST("logout")
     Call<ArrayList<ResponseData>> logout(@Body FieldsData fieldsLogout);
 

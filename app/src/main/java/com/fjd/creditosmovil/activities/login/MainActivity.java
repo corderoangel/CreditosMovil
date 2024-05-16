@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Toast;
 
 import com.fjd.creditosmovil.activities.home.view.HomeActivity;
 import com.fjd.creditosmovil.activities.login.MVP.MainContract;
@@ -18,7 +17,7 @@ import com.fjd.creditosmovil.activities.login.MVP.MainPresenter;
 import com.fjd.creditosmovil.activities.login.Models.FormLogin;
 import com.fjd.creditosmovil.databinding.ActivityMainBinding;
 import com.fjd.creditosmovil.util.singletons.Permissions;
-import com.fjd.creditosmovil.util.singletons.SnackbarUtil;
+import com.fjd.creditosmovil.util.singletons.Alerts;
 import com.fjd.creditosmovil.util.singletons.Tools;
 import com.fjd.creditosmovil.util.contracts.SessionUser;
 
@@ -144,13 +143,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void showErrors(String err) {
         binding.btnLogin.setEnabled(true);
-        SnackbarUtil.danger(binding.getRoot(), err,this);
+        Alerts.danger(binding.getRoot(), err,this);
         binding.progressBar.getRoot().setVisibility(View.GONE);
     }
 
     /**
      * Maneja la respuesta posterior a la solicitud de inicio de sesión.
-     *
      * Este método se llama después de recibir una respuesta del servidor al intentar iniciar sesión.
      * Habilita el botón de inicio de sesión y oculta el indicador de progreso.
      * Si la respuesta indica un inicio de sesión exitoso (true), activa la sesión del usuario.

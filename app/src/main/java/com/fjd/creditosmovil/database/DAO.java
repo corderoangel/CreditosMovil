@@ -26,7 +26,7 @@ public interface DAO {
     @Query("SELECT * FROM FOTOS WHERE ID_FOTO like:id_foto AND ESTADO LIKE:state AND TYPE LIKE:type")
     FotosEntity getFotoFindId(String id_foto,String type ,String state);
 
-    @Query("SELECT * FROM FOTOS WHERE ID_FOTO like:id_foto AND TYPE LIKE:type AND ESTADO ='N' OR ESTADO ='S' ")
+    @Query("SELECT * FROM FOTOS WHERE ID_FOTO like:id_foto AND TYPE LIKE:type AND ESTADO ='N' ")
     FotosEntity getFotoFindById(String id_foto, String type);
 
     @Query("SELECT count(*) FROM FOTOS WHERE ID_FOTO like:id_foto AND ESTADO ='S' ")

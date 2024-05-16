@@ -11,4 +11,6 @@
     <string name="clear_signature">Clear Signature</string>
     <string name="limpiar">Limpiar</string>
     <string name="finish">Finalizar Proceso</string>
+    <string name="xxxxxx">xxxxxx</string>
+    <string name="resend_code">Reenviar token</string>
 </resources>
