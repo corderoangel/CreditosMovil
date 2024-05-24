@@ -35,7 +35,6 @@ public class MainInteractor {
                 @Override
                 public void onResponse(Call<ArrayList<ResponseLogin>> call, Response<ArrayList<ResponseLogin>> response) {
                     try {
-                        assert response.body() != null;
 
                         ResponseLogin result = response.body().get(0);
                         if (response.isSuccessful()) {
