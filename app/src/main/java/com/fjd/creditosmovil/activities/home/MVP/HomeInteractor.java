@@ -77,12 +77,13 @@ public class HomeInteractor {
      * @param callbackParams Los parámetros de callback que contienen la lógica para manejar la respuesta del servidor.
      *                       Proporciona métodos para mostrar mensajes y devolver la respuesta procesada al llamador.
      */
-    public void retrieveValidateToken(String hastToken, HomeContract.CallbackParams callbackParams) {
+    public void retrieveValidateToken(String hastToken,String creditId, HomeContract.CallbackParams callbackParams) {
         try {
             EndPoints api = ApiClient.getApiService(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.URL_CONNECTION));
             FieldsData data = new FieldsData();
             data.setToken_access(SessionUser.getAccess(callbackParams.getContextClass(), SessionUser.TOKEN));
             data.setToken_hash(hastToken);
+            data.setCreditId(creditId);
             data.setAction("validar_codigo");
             assert api != null;
             api.service(data).enqueue(new Callback<ArrayList<ResponseData>>() {

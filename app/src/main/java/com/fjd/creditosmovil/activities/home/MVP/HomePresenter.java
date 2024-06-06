@@ -76,7 +76,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 return;
             }
             view.showMessages().showLoader("");
-            homeInteractor.retrieveValidateToken(tokenHash, new HomeContract.CallbackParams() {
+            homeInteractor.retrieveValidateToken(tokenHash, responseData.getCreditId(),new HomeContract.CallbackParams() {
                 @Override
                 public void onResponse(ArrayList<ResponseData> response) {
                     view.validateToken(response.get(0).getS_1().equalsIgnoreCase("1"), responseData);
