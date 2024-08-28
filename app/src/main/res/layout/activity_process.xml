@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    tools:menu="@menu/menu_process"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.process.ProcessActivity">
+    android:layout_rowSpan="2"
+    android:layout_columnSpan="2"
+    android:orientation="vertical"
+    tools:context=".activities.process.ProcessActivity"
+    tools:menu="@menu/menu_process">
 
-    <include android:id="@+id/progress_bar"
-        layout="@layout/progress_bar"/>
+    <include
+        android:id="@+id/progress_bar"
+        layout="@layout/progress_bar" />
+
     <ImageButton
         android:id="@+id/capturePhotoButton"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="70dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="117dp"
+        android:layout_marginEnd="30dp"
+        android:layout_toStartOf="@+id/captureSignatureButton"
+        android:contentDescription="@string/profile"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -24,16 +33,55 @@
         app:srcCompat="@drawable/fotografo" />
 
     <ImageButton
-        android:scaleType="fitCenter"
         android:id="@+id/captureSignatureButton"
-        android:layout_width="match_parent"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="70dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="117dp"
+        android:layout_marginEnd="42dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/capturePhotoButton"
         app:srcCompat="@drawable/firma" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageButton
+        android:id="@+id/captureDni1Button"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="351dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="230dp"
+        android:layout_toStartOf="@+id/captureDni2Button"
+        android:contentDescription="@string/profile"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fotografo" />
+
+    <ImageButton
+        android:id="@+id/captureDni2Button"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="348dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginBottom="230dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/capturePhotoButton"
+        app:srcCompat="@drawable/firma" />
+
+</RelativeLayout>
