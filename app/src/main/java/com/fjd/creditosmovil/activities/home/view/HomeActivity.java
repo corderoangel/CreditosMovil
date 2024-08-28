@@ -116,7 +116,9 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     public void logoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(getDrawable(R.drawable.ic_app));
-        builder.setTitle("¡Cerrar Sesión!").setCancelable(false).setMessage("¿Estas seguro de que deseas salir?").setPositiveButton("Ok", (dialog, id) -> presenter.logout()).setNegativeButton("Cancelar", ((dialog, which) -> dialog.dismiss()));
+        builder.setTitle("¡Cerrar Sesión!").setCancelable(false).setMessage("¿Estas seguro de que deseas salir?")
+               .setPositiveButton("Ok", (dialog, id) -> presenter.logout())
+               .setNegativeButton("Cancelar", ((dialog, which) -> dialog.dismiss()));
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -129,7 +131,9 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
 
     @SuppressLint("NonConstantResourceId")
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(
+            @NonNull
+            MenuItem item) {
         switch (item.getItemId()) {
             case R.id.icon_app:
                 presenter.getDataList();
@@ -184,7 +188,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
      * Maneja la respuesta recibida del servidor después de realizar una solicitud de datos.
      * Este método se llama cuando se recibe una respuesta del servidor después de realizar una solicitud de datos.
      * Si la respuesta está vacía o no contiene información de cliente, se establece una lista vacía en el modelo de vista.
-     * De lo contrario, se establece la lista de datos recibidos en el modelo de vista para su visualización en la interfaz de usuario.
+     * De lo contrario, se establece la lista de datos recibidos en el modelo de vista para su visualización en la interfaz de
+     * usuario.
      *
      * @param response La lista de datos recibidos del servidor.
      *                 Puede contener información sobre los clientes o estar vacía si no se encontraron datos.
@@ -241,7 +246,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         if (response) {
             deleteSharedPreferences("LOGIN");
             deleteSharedPreferences("PHOTOS");
-            startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+            startActivity(new Intent(this, MainActivity.class).addFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         }
     }

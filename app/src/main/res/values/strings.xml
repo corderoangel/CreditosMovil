@@ -13,4 +13,5 @@
     <string name="finish">Finalizar Proceso</string>
     <string name="xxxxxx">xxxxxx</string>
     <string name="resend_code">Reenviar token</string>
+    <string name="profile">profile</string>
 </resources>
