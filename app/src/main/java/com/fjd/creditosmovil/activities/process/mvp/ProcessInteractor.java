@@ -4,8 +4,6 @@ import com.fjd.creditosmovil.activities.home.models.FieldsData;
 import com.fjd.creditosmovil.activities.home.models.ResponseData;
 import com.fjd.creditosmovil.data.remote.ApiClient;
 import com.fjd.creditosmovil.data.remote.EndPoints;
-import com.fjd.creditosmovil.database.DAO;
-import com.fjd.creditosmovil.database.ManagerDataBase;
 import com.fjd.creditosmovil.util.contracts.SessionUser;
 
 import java.util.ArrayList;

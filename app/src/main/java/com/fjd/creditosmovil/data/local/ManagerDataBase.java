@@ -1,4 +1,4 @@
-package com.fjd.creditosmovil.database;
+package com.fjd.creditosmovil.data.local;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.fjd.creditosmovil.database.entities.FotosEntity;
+import com.fjd.creditosmovil.data.local.entities.FotosEntity;
 import com.fjd.creditosmovil.util.contracts.SessionUser;
 
 

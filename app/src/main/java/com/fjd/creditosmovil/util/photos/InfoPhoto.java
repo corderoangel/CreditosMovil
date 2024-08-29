@@ -9,8 +9,8 @@ import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
 
-import com.fjd.creditosmovil.database.ManagerDataBase;
-import com.fjd.creditosmovil.database.entities.FotosEntity;
+import com.fjd.creditosmovil.data.local.ManagerDataBase;
+import com.fjd.creditosmovil.data.local.entities.FotosEntity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class InfoPhoto {
     public static final String ID_FOTO = "idfoto", INFRA = "infra", BARRIO = "barrio", UBICATION = "ubication",
-            PREFIJO="prefijo" ,LUM="LUMINARIA", AP="APOYO", TR="TRAFO",  MAN="MANTENIMEINTO";
+            PREFIJO="prefijo" , TYPE ="TYPE", AP="APOYO", TR="TRAFO",  MAN="MANTENIMEINTO";
     private Context context;
 
     public InfoPhoto(@NonNull Context context) {

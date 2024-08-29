@@ -20,9 +20,9 @@ import com.fjd.creditosmovil.activities.home.models.ResponseData;
 import com.fjd.creditosmovil.activities.process.mvp.ProcessContract;
 import com.fjd.creditosmovil.activities.process.mvp.ProcessPresenter;
 import com.fjd.creditosmovil.activities.siganture.SignatureActivity;
-import com.fjd.creditosmovil.database.DAO;
-import com.fjd.creditosmovil.database.ManagerDataBase;
-import com.fjd.creditosmovil.database.entities.FotosEntity;
+import com.fjd.creditosmovil.data.local.DAO;
+import com.fjd.creditosmovil.data.local.ManagerDataBase;
+import com.fjd.creditosmovil.data.local.entities.FotosEntity;
 import com.fjd.creditosmovil.databinding.ActivityProcessBinding;
 import com.fjd.creditosmovil.util.contracts.ShowMessages;
 import com.fjd.creditosmovil.util.photos.InfoPhoto;
@@ -56,6 +56,10 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         savePhoto = new SavePhoto(this, showMessages());
         setValues();
         resetDataClient();
+        eventsManager();
+    }
+
+    void eventsManager() {
         //evento para capturar la foto
         binding.capturePhotoButton.setOnClickListener(v -> {
             setValues();
@@ -63,6 +67,29 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
                 showMessages().showWarning("Ya tienes una foto en proceso");
                 return;
             }
+            infoPhoto.setDataPhoto(InfoPhoto.TYPE, "FOTO");
+            Permissions.setPerms(this);
+            savePhoto.CapturarFoto();
+        });
+        //evento para capturar la foto de dni 1
+        binding.captureDni1Button.setOnClickListener(v -> {
+            setValues();
+            if (dao.getFotoFindId(ID_CREDIT, "dni 1", "S") != null) {
+                showMessages().showWarning("Ya tienes una foto en proceso");
+                return;
+            }
+            infoPhoto.setDataPhoto(InfoPhoto.TYPE, "dni 1");
+            Permissions.setPerms(this);
+            savePhoto.CapturarFoto();
+        });
+        //evento para capturar la foto de dni 2
+        binding.captureDni2Button.setOnClickListener(v -> {
+            setValues();
+            if (dao.getFotoFindId(ID_CREDIT, "dni 2", "S") != null) {
+                showMessages().showWarning("Ya tienes una foto en proceso");
+                return;
+            }
+            infoPhoto.setDataPhoto(InfoPhoto.TYPE, "dni 2");
             Permissions.setPerms(this);
             savePhoto.CapturarFoto();
         });
@@ -87,7 +114,9 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
 
     @SuppressLint("NonConstantResourceId")
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(
+            @NonNull
+            MenuItem item) {
         if (item.getItemId() == R.id.action_finish) {
             verifySuccessBiometrics();
         }
@@ -135,9 +164,10 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
                 //Una vez se toma la foto se procesa y pasa a su envio por el presenter
                 savePhoto.GuardarFoto(() -> {
                     //Validamos que exista una foto con este temporal biometrico
-                    if (dao.getFotoFindId(infoPhoto.getDataPhoto(InfoPhoto.ID_FOTO), "FOTO", "N") != null) {
+                    if (dao.getFotoFindId(infoPhoto.getDataPhoto(InfoPhoto.ID_FOTO), infoPhoto.getDataPhoto(InfoPhoto.TYPE),
+                                          "N") != null) {
                         //Ejecutamos el envio de la foto encontrada
-                        new ProcessPresenter(this).sendBiometric("FOTO", ID_CREDIT, CLIENT_DATA);
+                        new ProcessPresenter(this).sendBiometric(infoPhoto.getDataPhoto(InfoPhoto.TYPE), ID_CREDIT, CLIENT_DATA);
                     }
                 });
             } catch (Exception e) {
@@ -204,12 +234,26 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
 
     void viewPhoto() {
         try {
-            FotosEntity foto = dao.getFotoFindId(ID_CREDIT, "FOTO", "S");
-            Bitmap bitmap = BitmapFactory.decodeFile(foto.FOTO);
+            FotosEntity photo = dao.getFotoFindId(ID_CREDIT, infoPhoto.getDataPhoto(InfoPhoto.TYPE), "S");
+            if (photo == null) {
+                return;
+            }
+            Bitmap bitmap = BitmapFactory.decodeFile(photo.FOTO);
             if (bitmap == null) {
                 return;
             }
-            binding.capturePhotoButton.setImageBitmap(bitmap);
+            switch (infoPhoto.getDataPhoto(InfoPhoto.TYPE)) {
+                case "FOTO":
+                    binding.capturePhotoButton.setImageBitmap(bitmap);
+                    break;
+                case "dni 1":
+                    binding.captureDni1Button.setImageBitmap(bitmap);
+                    break;
+                case "dni 2":
+                    binding.captureDni2Button.setImageBitmap(bitmap);
+                    break;
+            }
+
         } catch (Exception e) {
             Log.e(TAG, "viewPhoto: ", e);
         }

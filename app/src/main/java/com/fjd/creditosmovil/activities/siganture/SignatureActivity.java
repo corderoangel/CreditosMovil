@@ -6,14 +6,12 @@ import android.util.Base64;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.fjd.creditosmovil.database.DAO;
-import com.fjd.creditosmovil.database.ManagerDataBase;
-import com.fjd.creditosmovil.database.entities.FotosEntity;
+import com.fjd.creditosmovil.data.local.DAO;
+import com.fjd.creditosmovil.data.local.ManagerDataBase;
+import com.fjd.creditosmovil.data.local.entities.FotosEntity;
 import com.fjd.creditosmovil.databinding.ActivitySignatureBinding;
-import com.fjd.creditosmovil.util.photos.MarkerPhoto;
 import com.fjd.creditosmovil.util.singletons.CaptureBitmapView;
 
-import java.io.File;
 import java.util.Calendar;
 
 public class SignatureActivity extends AppCompatActivity {

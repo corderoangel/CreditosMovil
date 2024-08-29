@@ -8,12 +8,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 
 
-import com.fjd.creditosmovil.database.DAO;
-import com.fjd.creditosmovil.database.ManagerDataBase;
-import com.fjd.creditosmovil.database.entities.FotosEntity;
+import com.fjd.creditosmovil.data.local.DAO;
+import com.fjd.creditosmovil.data.local.ManagerDataBase;
+import com.fjd.creditosmovil.data.local.entities.FotosEntity;
 import com.fjd.creditosmovil.util.contracts.CallbackPhoto;
 import com.fjd.creditosmovil.util.contracts.ShowMessages;
 
@@ -67,7 +66,7 @@ public class SavePhoto {
             fotosEntity.MES = String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1);
             fotosEntity.FOTO = infoPhoto.SavePhotoDirFiles(markerPhoto.WaterMaker());
             fotosEntity.ESTADO = "N";
-            fotosEntity.TYPE = "FOTO";
+            fotosEntity.TYPE = infoPhoto.getDataPhoto(InfoPhoto.TYPE);
             /////////////////////////////////////////////////////////
             long res1 = dao.insert(fotosEntity);
             if (res1 > 0) {

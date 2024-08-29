@@ -6,9 +6,9 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import com.fjd.creditosmovil.activities.home.models.ResponseData;
-import com.fjd.creditosmovil.database.DAO;
-import com.fjd.creditosmovil.database.ManagerDataBase;
-import com.fjd.creditosmovil.database.entities.FotosEntity;
+import com.fjd.creditosmovil.data.local.DAO;
+import com.fjd.creditosmovil.data.local.ManagerDataBase;
+import com.fjd.creditosmovil.data.local.entities.FotosEntity;
 import com.fjd.creditosmovil.util.contracts.ShowMessages;
 import com.fjd.creditosmovil.util.photos.MarkerPhoto;
 
@@ -54,7 +54,7 @@ public class ProcessPresenter implements ProcessContract.Presenter {
         try {
             view.showMessages().showLoader("Enviando "+type.toLowerCase(Locale.ROOT));
             String biometric = getBiometric(type, idBiometric).FOTO;
-            if (type.equalsIgnoreCase("FOTO")) {
+            if (!type.equalsIgnoreCase("FIRMA")) {
                 Bitmap bitmap = BitmapFactory.decodeFile(biometric);
                 MarkerPhoto markerPhoto = new MarkerPhoto(view.getContextClass(), null, null, null, null);
                 biometric = Base64.encodeToString(markerPhoto.getBytes(bitmap), Base64.DEFAULT);
