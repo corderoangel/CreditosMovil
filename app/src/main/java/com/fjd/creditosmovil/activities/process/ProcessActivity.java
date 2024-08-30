@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fjd.creditosmovil.R;
 import com.fjd.creditosmovil.activities.home.models.ResponseData;
+import com.fjd.creditosmovil.activities.process.models.DataProcess;
 import com.fjd.creditosmovil.activities.process.mvp.ProcessContract;
 import com.fjd.creditosmovil.activities.process.mvp.ProcessPresenter;
 import com.fjd.creditosmovil.activities.siganture.SignatureActivity;
@@ -39,6 +41,7 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
     DAO dao;
     String ID_CREDIT, ID_BIOMETRIC;
     ResponseData CLIENT_DATA;
+    ProcessPresenter processPresenter;
 
     /**
      * @param savedInstanceState If the activity is being re-initialized after
@@ -48,6 +51,7 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        processPresenter = new ProcessPresenter(this);
         binding = ActivityProcessBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         intent = getIntent();
@@ -59,43 +63,46 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         eventsManager();
     }
 
+    /**
+     * Manejador de eventos de la vista
+     */
     void eventsManager() {
         //evento para capturar la foto
         binding.capturePhotoButton.setOnClickListener(v -> {
             setValues();
-            if (dao.getFotoFindId(ID_CREDIT, "FOTO", "S") != null) {
+            if (dao.getFotoFindId(ID_CREDIT, DataProcess.PHOTO, "S") != null) {
                 showMessages().showWarning("Ya tienes una foto en proceso");
                 return;
             }
-            infoPhoto.setDataPhoto(InfoPhoto.TYPE, "FOTO");
+            infoPhoto.setDataPhoto(InfoPhoto.TYPE, DataProcess.PHOTO);
             Permissions.setPerms(this);
             savePhoto.CapturarFoto();
         });
         //evento para capturar la foto de dni 1
         binding.captureDni1Button.setOnClickListener(v -> {
             setValues();
-            if (dao.getFotoFindId(ID_CREDIT, "dni 1", "S") != null) {
+            if (dao.getFotoFindId(ID_CREDIT, DataProcess.DNI_FRONT, "S") != null) {
                 showMessages().showWarning("Ya tienes una foto en proceso");
                 return;
             }
-            infoPhoto.setDataPhoto(InfoPhoto.TYPE, "dni 1");
+            infoPhoto.setDataPhoto(InfoPhoto.TYPE, DataProcess.DNI_FRONT);
             Permissions.setPerms(this);
             savePhoto.CapturarFoto();
         });
         //evento para capturar la foto de dni 2
         binding.captureDni2Button.setOnClickListener(v -> {
             setValues();
-            if (dao.getFotoFindId(ID_CREDIT, "dni 2", "S") != null) {
+            if (dao.getFotoFindId(ID_CREDIT, DataProcess.DNI_BACK, "S") != null) {
                 showMessages().showWarning("Ya tienes una foto en proceso");
                 return;
             }
-            infoPhoto.setDataPhoto(InfoPhoto.TYPE, "dni 2");
+            infoPhoto.setDataPhoto(InfoPhoto.TYPE, DataProcess.DNI_BACK);
             Permissions.setPerms(this);
             savePhoto.CapturarFoto();
         });
         //Evento para agregar la firma
         binding.captureSignatureButton.setOnClickListener(v -> {
-            if (dao.getFotoFindId(ID_CREDIT, "FIRMA", "S") != null) {
+            if (dao.getFotoFindId(ID_CREDIT, DataProcess.SIGNATURE, "S") != null) {
                 showMessages().showWarning("Ya tienes una firma en proceso");
                 return;
             }
@@ -118,7 +125,7 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
             @NonNull
             MenuItem item) {
         if (item.getItemId() == R.id.action_finish) {
-            verifySuccessBiometrics();
+            processPresenter.finalizeBiometrics(ID_CREDIT);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -130,7 +137,6 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
      * la información de la foto en el objeto InfoPhoto.
      * Si los datos esperados no están presentes en el Intent, la actividad se finaliza.
      */
-
     void setValues() {
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("objetCredit")) {
@@ -167,7 +173,7 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
                     if (dao.getFotoFindId(infoPhoto.getDataPhoto(InfoPhoto.ID_FOTO), infoPhoto.getDataPhoto(InfoPhoto.TYPE),
                                           "N") != null) {
                         //Ejecutamos el envio de la foto encontrada
-                        new ProcessPresenter(this).sendBiometric(infoPhoto.getDataPhoto(InfoPhoto.TYPE), ID_CREDIT, CLIENT_DATA);
+                        processPresenter.sendBiometric(infoPhoto.getDataPhoto(InfoPhoto.TYPE), ID_CREDIT, CLIENT_DATA);
                     }
                 });
             } catch (Exception e) {
@@ -182,23 +188,9 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
      * Si se encuentra una firma no procesada en la base de datos, se envía al servidor para su procesamiento.
      */
     void verifySignature() {
-        FotosEntity entity = dao.getFotoFindId(ID_CREDIT, "FIRMA", "N");
+        FotosEntity entity = dao.getFotoFindId(ID_CREDIT, DataProcess.SIGNATURE, "N");
         if (entity != null) {
-            new ProcessPresenter(this).sendBiometric("FIRMA", ID_CREDIT, CLIENT_DATA);
-        }
-    }
-
-    /**
-     * Verifica si se han agregado correctamente todas las biometrías asociadas al crédito actual.
-     * Este método comprueba si se han agregado con éxito todas las biometrías requeridas asociadas al ID de crédito actual.
-     * Si todas las biometrías requeridas han sido agregadas con éxito, la actividad se finaliza.
-     * Si faltan biometrías por agregar, se muestra un mensaje de advertencia indicando que se deben agregar todos los datos.
-     */
-    void verifySuccessBiometrics() {
-        if (dao.getSuccessPhoto(ID_CREDIT) > 0) {
-            finish();
-        } else {
-            showMessages().showWarning("Debes Agregar todos los datos");
+            new ProcessPresenter(this).sendBiometric(DataProcess.SIGNATURE, ID_CREDIT, CLIENT_DATA);
         }
     }
 
@@ -232,6 +224,22 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
 
     }
 
+    /**
+     * Verifica si se han agregado correctamente todas las biometrías asociadas al crédito actual.
+     * Este método comprueba si se han agregado con éxito todas las biometrías requeridas asociadas al ID de crédito actual.
+     * Si todas las biometrías requeridas han sido agregadas con éxito, la actividad se finaliza.
+     * Si faltan biometrías por agregar, se muestra un mensaje de advertencia indicando que se deben agregar todos los datos.
+     */
+    @Override
+    public void onFinalizeBiometric(boolean response) {
+        if (response) {
+            finish();
+        }
+    }
+
+    /**
+     * Mostrar la foto en la imagen que corresponde
+     */
     void viewPhoto() {
         try {
             FotosEntity photo = dao.getFotoFindId(ID_CREDIT, infoPhoto.getDataPhoto(InfoPhoto.TYPE), "S");
@@ -243,13 +251,13 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
                 return;
             }
             switch (infoPhoto.getDataPhoto(InfoPhoto.TYPE)) {
-                case "FOTO":
+                case DataProcess.PHOTO:
                     binding.capturePhotoButton.setImageBitmap(bitmap);
                     break;
-                case "dni 1":
+                case DataProcess.DNI_FRONT:
                     binding.captureDni1Button.setImageBitmap(bitmap);
                     break;
-                case "dni 2":
+                case DataProcess.DNI_BACK:
                     binding.captureDni2Button.setImageBitmap(bitmap);
                     break;
             }
@@ -259,9 +267,12 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
         }
     }
 
+    /**
+     * Visualizar la firma en su imagen
+     */
     void viewFirma() {
         try {
-            FotosEntity firma = dao.getFotoFindId(ID_CREDIT, "FIRMA", "%%");
+            FotosEntity firma = dao.getFotoFindId(ID_CREDIT, DataProcess.SIGNATURE, "%%");
             if (firma == null) {
                 return;
             }

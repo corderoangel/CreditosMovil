@@ -11,8 +11,6 @@ public class FieldsData {
     String action;
     @SerializedName("FOTO64")
     String photoB64;
-    @SerializedName("EIDENTIF_USUARIO")
-    private String user;
     @SerializedName("TCR_ID")
     String creditId;
     @SerializedName("ABI_ID")
@@ -23,6 +21,18 @@ public class FieldsData {
     String clientDni;
     @SerializedName("PER_ID")
     String clientId;
+    @SerializedName("ETIPO")
+    String type;
+    @SerializedName("EIDENTIF_USUARIO")
+    private String user;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public void setCreditId(String creditId) {
         this.creditId = creditId;

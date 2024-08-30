@@ -11,11 +11,13 @@ public interface ProcessContract {
     interface View {
         ShowMessages showMessages();
         void onResponse(boolean response);
+        void onFinalizeBiometric(boolean response);
         Context getContextClass();
     }
 
     interface Presenter {
         void sendBiometric(String type, String idBiometric, ResponseData responseData);
+        void finalizeBiometrics(String idBiometric);
     }
 
     interface CallbackParams {

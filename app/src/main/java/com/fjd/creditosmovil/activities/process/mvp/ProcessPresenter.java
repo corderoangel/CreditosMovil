@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import com.fjd.creditosmovil.activities.home.models.ResponseData;
+import com.fjd.creditosmovil.activities.process.models.DataProcess;
 import com.fjd.creditosmovil.data.local.DAO;
 import com.fjd.creditosmovil.data.local.ManagerDataBase;
 import com.fjd.creditosmovil.data.local.entities.FotosEntity;
@@ -13,7 +14,6 @@ import com.fjd.creditosmovil.util.contracts.ShowMessages;
 import com.fjd.creditosmovil.util.photos.MarkerPhoto;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 
 public class ProcessPresenter implements ProcessContract.Presenter {
@@ -43,45 +43,45 @@ public class ProcessPresenter implements ProcessContract.Presenter {
      * Este método envía una biometría al servidor y procesa la respuesta recibida. Dependiendo del tipo de biometría,
      * puede ser necesario realizar alguna conversión antes de enviarla, como codificar una imagen en Base64.
      *
-     * @param type          El tipo de biometría a enviar.
-     * @param idBiometric   El ID único de la biometría a enviar.
-     * @param responseData  Los datos de respuesta asociados con la operación de envío de la biometría.
-     *                      Se utiliza para manejar la respuesta recibida del servidor.
+     * @param type         El tipo de biometría a enviar.
+     * @param idBiometric  El ID único de la biometría a enviar.
+     * @param responseData Los datos de respuesta asociados con la operación de envío de la biometría.
+     *                     Se utiliza para manejar la respuesta recibida del servidor.
      */
 
     @Override
     public void sendBiometric(String type, String idBiometric, ResponseData responseData) {
         try {
-            view.showMessages().showLoader("Enviando "+type.toLowerCase(Locale.ROOT));
+            view.showMessages().showLoader("Enviando...");
             String biometric = getBiometric(type, idBiometric).FOTO;
-            if (!type.equalsIgnoreCase("FIRMA")) {
+            if (!type.equalsIgnoreCase(DataProcess.SIGNATURE)) {
                 Bitmap bitmap = BitmapFactory.decodeFile(biometric);
                 MarkerPhoto markerPhoto = new MarkerPhoto(view.getContextClass(), null, null, null, null);
                 biometric = Base64.encodeToString(markerPhoto.getBytes(bitmap), Base64.DEFAULT);
             }
-            processInteractor.retriveBiometricResponse(responseData, biometric, type.toLowerCase(), new ProcessContract.CallbackParams() {
+            processInteractor.retrieveBiometricResponse(responseData, biometric, type, new ProcessContract.CallbackParams() {
                 @Override
                 public void onResponse(ArrayList<ResponseData> response) {
-                   try {
-                       if (response.size()==0){
-                           view.showMessages().hideLoader();
-                           dao.updatePhotosStateFailed(String.valueOf(getBiometric(type, idBiometric).ID));
-                           return;
-                       }
-                       boolean status =response.get(0).getS_1().equalsIgnoreCase("1");
-                       if (status){
-                           view.showMessages().showSuccess(response.get(0).getS_2());
-                           dao.updatePhotosState(String.valueOf(getBiometric(type, idBiometric).ID));
-                       }else {
-                           view.showMessages().showErrors(response.get(0).getS_2());
-                           dao.updatePhotosStateFailed(String.valueOf(getBiometric(type, idBiometric).ID));
-                           return;
-                       }
-                       view.onResponse(status);
-                       view.showMessages().hideLoader();
-                   }catch (Exception e){
-                       e.printStackTrace();
-                   }
+                    try {
+                        if (response.isEmpty()) {
+                            view.showMessages().hideLoader();
+                            dao.updatePhotosStateFailed(String.valueOf(getBiometric(type, idBiometric).ID));
+                            return;
+                        }
+                        boolean status = response.get(0).getS_1().equalsIgnoreCase("1");
+                        if (status) {
+                            view.showMessages().showSuccess(response.get(0).getS_2());
+                            dao.updatePhotosState(String.valueOf(getBiometric(type, idBiometric).ID));
+                        } else {
+                            view.showMessages().showErrors(response.get(0).getS_2());
+                            dao.updatePhotosStateFailed(String.valueOf(getBiometric(type, idBiometric).ID));
+                            return;
+                        }
+                        view.onResponse(status);
+                        view.showMessages().hideLoader();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -95,7 +95,52 @@ public class ProcessPresenter implements ProcessContract.Presenter {
                     return view.showMessages();
                 }
             });
-           // view.showMessages().hideLoader();
+            // view.showMessages().hideLoader();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            view.showMessages().showErrors(e.getMessage());
+        }
+    }
+
+    @Override
+    public void finalizeBiometrics(String creditId) {
+        try {
+            view.showMessages().showLoader("Verificando...");
+            processInteractor.finalizeBiometricResponse(creditId, new ProcessContract.CallbackParams() {
+                @Override
+                public void onResponse(ArrayList<ResponseData> response) {
+                    try {
+                        if (response.isEmpty()) {
+                            view.showMessages().hideLoader();
+                            return;
+                        }
+                        boolean status = response.get(0).getS_1().equalsIgnoreCase("1");
+                        if (status) {
+                            view.showMessages().showSuccess(response.get(0).getS_2());
+                            view.onFinalizeBiometric(true);
+                        } else {
+                            view.showMessages().showErrors(response.get(0).getS_2());
+                        }
+
+                        view.showMessages().hideLoader();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public Context getContextClass() {
+                    return view.getContextClass();
+                }
+
+                @Override
+                public ShowMessages showMessages() {
+                    return view.showMessages();
+                }
+            });
+            // view.showMessages().hideLoader();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,7 +157,7 @@ public class ProcessPresenter implements ProcessContract.Presenter {
      * @param id   El identificador único de la entidad biométrica a recuperar de la base de datos.
      *             Este ID se utiliza para localizar la entidad biométrica en la base de datos.
      * @return Un objeto FotosEntity que representa la entidad biométrica recuperada.
-     *         Devuelve null si no se encuentra ninguna entidad biométrica que coincida con el tipo e ID proporcionados.
+     * Devuelve null si no se encuentra ninguna entidad biométrica que coincida con el tipo e ID proporcionados.
      */
 
     FotosEntity getBiometric(String type, String id) {
