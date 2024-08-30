@@ -10,19 +10,25 @@ import java.util.ArrayList;
 public interface ProcessContract {
     interface View {
         ShowMessages showMessages();
-        void onResponse(boolean response);
+
+        void onResponse(boolean response, String process);
+
         void onFinalizeBiometric(boolean response);
+
         Context getContextClass();
     }
 
     interface Presenter {
         void sendBiometric(String type, String idBiometric, ResponseData responseData);
+
         void finalizeBiometrics(String idBiometric);
     }
 
     interface CallbackParams {
         void onResponse(ArrayList<ResponseData> response);
+
         Context getContextClass();
+
         ShowMessages showMessages();
     }
 

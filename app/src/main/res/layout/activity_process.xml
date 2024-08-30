@@ -10,6 +10,21 @@
     tools:context=".activities.process.ProcessActivity"
     tools:menu="@menu/menu_process">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/information"
+        android:textAlignment="center"
+        android:textSize="12sp" />
+
     <include
         android:id="@+id/progress_bar"
         layout="@layout/progress_bar" />
@@ -20,9 +35,11 @@
         android:layout_height="150dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="40dp"
         android:layout_marginTop="117dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginBottom="464dp"
         android:layout_toStartOf="@+id/captureSignatureButton"
         android:contentDescription="@string/profile"
         android:scaleType="fitCenter"
@@ -30,7 +47,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/fotografo" />
+        app:srcCompat="@drawable/perfil" />
 
     <ImageButton
         android:id="@+id/captureSignatureButton"
@@ -38,8 +55,11 @@
         android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="117dp"
         android:layout_marginEnd="42dp"
+        android:layout_marginBottom="464dp"
+        android:contentDescription="@string/firma"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,13 +79,14 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="230dp"
         android:layout_toStartOf="@+id/captureDni2Button"
-        android:contentDescription="@string/profile"
+        android:contentDescription="@string/frente_c_dula"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/fotografo" />
+        app:srcCompat="@drawable/cedula_frontal" />
+
 
     <ImageButton
         android:id="@+id/captureDni2Button"
@@ -77,11 +98,52 @@
         android:layout_marginTop="348dp"
         android:layout_marginEnd="42dp"
         android:layout_marginBottom="230dp"
+        android:contentDescription="@string/posterior_c_dula"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/capturePhotoButton"
-        app:srcCompat="@drawable/firma" />
+        app:srcCompat="@drawable/cedula_posterior" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="274dp"
+        android:text="@string/foto_perfil"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="272dp"
+        android:layout_marginTop="274dp"
+        android:text="@string/firma"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="61dp"
+        android:layout_marginTop="507dp"
+        android:text="@string/frente_c_dula"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="231dp"
+        android:layout_marginTop="507dp"
+        android:text="@string/posterior_c_dula"
+        android:textSize="17sp" />
 
 </RelativeLayout>

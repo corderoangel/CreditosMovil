@@ -14,4 +14,9 @@
     <string name="xxxxxx">xxxxxx</string>
     <string name="resend_code">Reenviar token</string>
     <string name="profile">profile</string>
+    <string name="frente_c_dula">Frente Cédula</string>
+    <string name="posterior_c_dula">Posterior Cédula</string>
+    <string name="firma">Firma</string>
+    <string name="foto_perfil">Foto Perfil</string>
+    <string name="information">Por favor, procede a completar la captura de identificación digital. Esto incluye la toma de tu firma, foto de perfil y las imágenes de tu cédula por ambas caras. Este proceso es necesario para asegurar la autenticidad y seguridad de tu identidad en nuestro sistema.</string>
 </resources>

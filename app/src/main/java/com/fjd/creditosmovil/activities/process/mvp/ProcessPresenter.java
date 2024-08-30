@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 
 import com.fjd.creditosmovil.activities.home.models.ResponseData;
 import com.fjd.creditosmovil.activities.process.models.DataProcess;
@@ -13,11 +14,13 @@ import com.fjd.creditosmovil.data.local.entities.FotosEntity;
 import com.fjd.creditosmovil.util.contracts.ShowMessages;
 import com.fjd.creditosmovil.util.photos.MarkerPhoto;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
 public class ProcessPresenter implements ProcessContract.Presenter {
 
+    private static final String TAG = "ProcessPresenter";
     private final ProcessContract.View view;
     ProcessInteractor processInteractor;
     DAO dao;
@@ -52,35 +55,51 @@ public class ProcessPresenter implements ProcessContract.Presenter {
     @Override
     public void sendBiometric(String type, String idBiometric, ResponseData responseData) {
         try {
+            // Mostramos el loader
             view.showMessages().showLoader("Enviando...");
-            String biometric = getBiometric(type, idBiometric).FOTO;
+            //Obtenemos el registro delm dato a enviar
+            FotosEntity fotosEntity = getBiometric(type, idBiometric);
+            if (fotosEntity == null) {
+                view.showMessages().showWarning("Evidencia no encontrada");
+                return;
+            }
+
+            String biometric = fotosEntity.FOTO;
             if (!type.equalsIgnoreCase(DataProcess.SIGNATURE)) {
                 Bitmap bitmap = BitmapFactory.decodeFile(biometric);
                 MarkerPhoto markerPhoto = new MarkerPhoto(view.getContextClass(), null, null, null, null);
                 biometric = Base64.encodeToString(markerPhoto.getBytes(bitmap), Base64.DEFAULT);
             }
+            //Realizamos el proceso de envio y resolvemos la respuesta
             processInteractor.retrieveBiometricResponse(responseData, biometric, type, new ProcessContract.CallbackParams() {
                 @Override
                 public void onResponse(ArrayList<ResponseData> response) {
                     try {
+                        //Validamos que la respuesta no este vacia
                         if (response.isEmpty()) {
                             view.showMessages().hideLoader();
-                            dao.updatePhotosStateFailed(String.valueOf(getBiometric(type, idBiometric).ID));
+                            dao.updatePhotoStateFailedById(String.valueOf(getBiometric(type, idBiometric).ID));
                             return;
                         }
+                        // Validamos si la respuesta fue correcta
                         boolean status = response.get(0).getS_1().equalsIgnoreCase("1");
                         if (status) {
+                            //Mostramos mensaje de exito y actualizamos en la base de datos y eliminamos el file de la foto
                             view.showMessages().showSuccess(response.get(0).getS_2());
-                            dao.updatePhotosState(String.valueOf(getBiometric(type, idBiometric).ID));
+                            dao.updatePhotoStateById(String.valueOf(getBiometric(type, idBiometric).ID));
+                            deleteFilePhoto(fotosEntity.FOTO, fotosEntity.ID);
+
                         } else {
+                            // Mostramos el mensaje de error
                             view.showMessages().showErrors(response.get(0).getS_2());
-                            dao.updatePhotosStateFailed(String.valueOf(getBiometric(type, idBiometric).ID));
+                            dao.updatePhotoStateFailedById(String.valueOf(getBiometric(type, idBiometric).ID));
                             return;
                         }
-                        view.onResponse(status);
+                        // Ejecutamos el proceso de muestra de la foto en la vista
+                        view.onResponse(true, type);
                         view.showMessages().hideLoader();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "onResponse: ", e);
                     }
 
                 }
@@ -98,26 +117,37 @@ public class ProcessPresenter implements ProcessContract.Presenter {
             // view.showMessages().hideLoader();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "sendBiometric: ", e);
             view.showMessages().showErrors(e.getMessage());
         }
     }
 
+    /**
+     * Finalizamos el proce de datos biometricos
+     *
+     * @param creditId ide del temporal del credito
+     */
     @Override
     public void finalizeBiometrics(String creditId) {
         try {
+            //Mostramos el loader
             view.showMessages().showLoader("Verificando...");
+            //Ejecutamos la peticion
             processInteractor.finalizeBiometricResponse(creditId, new ProcessContract.CallbackParams() {
                 @Override
                 public void onResponse(ArrayList<ResponseData> response) {
                     try {
+                        //Validamos que la respuesta no este vacia
                         if (response.isEmpty()) {
                             view.showMessages().hideLoader();
                             return;
                         }
+                        // Validamos si la respuesta fue correcta
                         boolean status = response.get(0).getS_1().equalsIgnoreCase("1");
+                        // Mostramos los mensajes de exito o error
                         if (status) {
                             view.showMessages().showSuccess(response.get(0).getS_2());
+                            //Procedemos a realizar la operacion en la vista
                             view.onFinalizeBiometric(true);
                         } else {
                             view.showMessages().showErrors(response.get(0).getS_2());
@@ -125,7 +155,7 @@ public class ProcessPresenter implements ProcessContract.Presenter {
 
                         view.showMessages().hideLoader();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "onResponse: ", e);
                     }
 
                 }
@@ -143,7 +173,7 @@ public class ProcessPresenter implements ProcessContract.Presenter {
             // view.showMessages().hideLoader();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "finalizeBiometrics: ", e);
             view.showMessages().showErrors(e.getMessage());
         }
     }
@@ -159,9 +189,32 @@ public class ProcessPresenter implements ProcessContract.Presenter {
      * @return Un objeto FotosEntity que representa la entidad biométrica recuperada.
      * Devuelve null si no se encuentra ninguna entidad biométrica que coincida con el tipo e ID proporcionados.
      */
-
     FotosEntity getBiometric(String type, String id) {
-        return dao.getFotoFindById(id, type);
+        return dao.findPhotoById(id, type);
+    }
+
+    /**
+     * Eliminamos el archivo de la foto que se guardo en local
+     *
+     * @param path ruta de la foto
+     * @param id   id del registro en la base de datos
+     */
+    void deleteFilePhoto(String path, int id) {
+        try {
+            //Eliminamos el registro de la base de datos
+            if (dao.deletePhotoFindId(id) > 0) {
+                //Obtenemos la file de la foto
+                File photo = new File(path);
+                // Validamos si existe y si es una archivo
+                if (photo.exists() && photo.isFile()) {
+                    //eliminamos el archivo
+                    boolean delete = photo.delete();
+                }
+            }
+        } catch (Exception ex) {
+            Log.e(TAG, "deleteFilePhoto: ", ex);
+        }
+
     }
 
 }

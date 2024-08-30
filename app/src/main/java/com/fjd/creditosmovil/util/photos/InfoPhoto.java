@@ -38,7 +38,7 @@ public class InfoPhoto {
         edit.commit();
     }
     public int getMaxPhoto(){
-        ArrayList<FotosEntity> countFotos = new ArrayList<>(ManagerDataBase.getInstance(context).getDAO().getFotosFindId(getDataPhoto(ID_FOTO),"%%"));
+        ArrayList<FotosEntity> countFotos = new ArrayList<>(ManagerDataBase.getInstance(context).getDAO().getPhotosById(getDataPhoto(ID_FOTO), "%%"));
         return  countFotos.size()+1;
     }
     public String SavePhotoDirFiles(@NonNull byte[] foto){
