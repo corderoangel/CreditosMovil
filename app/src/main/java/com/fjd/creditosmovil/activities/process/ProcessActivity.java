@@ -11,9 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fjd.creditosmovil.R;
@@ -230,10 +230,20 @@ public class ProcessActivity extends AppCompatActivity implements ProcessContrac
      * Si todas las biometrías requeridas han sido agregadas con éxito, la actividad se finaliza.
      * Si faltan biometrías por agregar, se muestra un mensaje de advertencia indicando que se deben agregar todos los datos.
      */
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onFinalizeBiometric(boolean response) {
         if (response) {
-            finish();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(getDrawable(R.drawable.ic_app));
+            builder.setTitle("¡Verificación de biométricos!").setCancelable(false)
+                   .setMessage("El proceso de datos biométricos ha finalizado con éxito")
+                   .setPositiveButton("Ok", (dialog, id) -> {
+                       dialog.dismiss();
+                       finish();
+                   });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 
